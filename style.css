@@ -1,0 +1,155 @@
+/* Written by Leslie C. Bomar contact: mrlesbomar@gmail.com */
+
+body {
+	background-color: green;
+	margin: 0px;
+	padding: 0px;
+	overflow: hidden;
+}
+
+#gameboard {
+	width: 100vw;
+	height: 100vh;
+	background-color: green;
+	display: grid;
+	grid-template-columns: 24.75% 5.5% 2% 5.5% 2% 5.5% 2% 5.5% 2% 5.5% 2% 5.5% 2% 5.5% 24.75%;
+	grid-template-rows: 1vw 7.5vw 3vw auto;
+}
+
+.playingCard {
+	width: 5.5vw;
+	height: 7.5vw;
+	background-color: white;
+	border-radius: .5vw;
+	box-shadow: 2px 2px 2px black;
+	border: .5px solid black;
+	position: absolute;
+}
+
+.crosshatch { 
+	/* This pattern (Half-Rombes) created by Valentin Agachi sourced from URL below
+	   http://lea.verou.me/css3patterns/#half-rombes */
+	background: #36c;
+	background: 
+		linear-gradient(115deg, transparent 75%, rgba(255,255,255,.8) 75%) 0 0,
+		linear-gradient(245deg, transparent 75%, rgba(255,255,255,.8) 75%) 0 0,
+		linear-gradient(115deg, transparent 75%, rgba(255,255,255,.8) 75%) 7px -15px,
+		linear-gradient(245deg, transparent 75%, rgba(255,255,255,.8) 75%) 7px -15px,
+		#36c;
+	background-size: 15px 30px
+}
+
+.selected {
+	background-color: rgb(190,190,190);
+}
+
+.playingCard h6, h5 {
+	margin: 0px;
+	height: 2.3vw;
+}
+
+.playingCardLeftSymbol {
+	padding-left: .375vw;
+	padding-top: .375vw;
+	font-size: 1.75vmax;
+}
+
+.playingCardMidSymbol {
+	text-align: center;
+	font-size: 2.5vmax;
+}
+
+.playingCardRightSymbol {
+	text-align: right;
+	padding-right: .375vw;
+	padding-bottom: .375vw;
+	font-size: 1.75vmax;
+}
+
+.stack {
+	position: relative;
+}
+
+.suit {
+	background-repeat: no-repeat;
+	background-size: 5.5vw;
+	border: 1px solid black;
+	background-position: center;
+}
+
+#deck {
+	grid-row: 2;
+	grid-column: 2;
+	position: relative;
+}
+
+#draw {
+	grid-row: 2;
+	grid-column: 4;
+}
+
+#spades {
+	grid-row: 2;
+	grid-column: 8;
+	background-image: url(spade.png);
+}
+
+#hearts {
+	grid-row: 2;
+	grid-column: 10;
+	background-image: url(heart.png);
+}
+
+#clubs {
+	grid-row: 2;
+	grid-column: 12;
+	background-image: url(club.png);
+}
+
+#diamonds {
+	grid-row: 2;
+	grid-column: 14;
+	background-image: url(diamond.png);
+}
+
+#drawButton {
+	grid-row: 3;
+	grid-column: 1;
+	height: 20px;
+	width: 50px;
+}
+
+#stack1 {
+	grid-row: 4;
+	grid-column: 2;
+}
+
+#stack2 {
+	grid-row: 4;
+	grid-column: 4;
+}
+
+#stack3 {
+	grid-row: 4;
+	grid-column: 6;
+}
+
+#stack4 {
+	grid-row: 4;
+	grid-column: 8;
+}
+
+#stack5 {
+	grid-row: 4;
+	grid-column: 10;
+}
+
+#stack6 {
+	grid-row: 4;
+	grid-column: 12;
+}
+
+#stack7 {
+	grid-row: 4;
+	grid-column: 14;
+}
