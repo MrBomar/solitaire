@@ -1,0 +1,23 @@
+Right now I am trying to get the animation sequence fixed.
+Currently I need the correct measurements transfered and used in the animation, but the animation is working.
+
+Once that is complete, then we need to set up the structure necessary to execute cut and paste functions once the animation is complete.
+
+
+02/11/2019 - 
+Animation has been successfully implemented. Right now, the only set left is to fix the margin spacing. Specifically, we need to apply 
+viewport sizing to the margins and positioning.
+Next - We need to correct the card click event management.
+
+2/13 - 
+Need to make the face down card in the Tableau flip after the move has been moved. Currently need to find a way to capture the tableau name before
+the card is move, then use that name after the card has moved to execute the flipping of the top card.
+
+2/14 - 
+Game is now fully functional and seems to be sizing properly. Need to finish/add the following features
+ - Animated card flip
+ - Add undo features
+ - Add drag and drop
+ - Add auto solve feature
+ - Address zIndex issue with moving cards
+ - Need to adjust tableau top margin so that it is flexible

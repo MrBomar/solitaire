@@ -1,0 +1,150 @@
+/*All non-sizing style atributes are managed in the top section*/
+
+* {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    box-sizing: border-box;
+    position: fixed;
+}
+body {
+    background-color: green;
+}
+.tableau {
+    z-index: -1;
+}
+/*Portrait View*/
+
+#control button {
+     width: 12vw;
+     display: block;
+     position: static;
+     margin-top: 2.8vw;
+     margin-left: .5vw;
+     height: 2.8vw;
+}
+
+.symbol {
+    font-size:14vw;
+    text-align: center;
+    width: 13.14vw;
+    z-index: -1;
+    /*user-select: none;*/
+}
+.foundation {
+    border: 1px inset;
+    border-radius: 1vw;
+    background-color: rgba(255,255,255,.25);
+    z-index: -1;
+}
+.cardFront{
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 1px 2px black;
+    border-radius: 1vw;
+}
+.cardFront h1{
+    text-align: center;
+    line-height: 20.4397vw;
+    font-size: 14vw;
+    width: 13.14vw;
+    /*user-select: none;*/
+}
+.cardFront h2{
+    font-size: 4vw;
+    width: 13.14vw;
+    /*user-select: none;*/
+}
+.cardBack{
+    background-color: teal;
+    border-width: 1vh;
+    border-style: ridge groove groove ridge;
+    border-radius: 1vw;
+    box-shadow: 1px 2px black;
+    /*user-select: none;*/
+}
+.right {
+    text-align: right;
+    padding-right: 1vw;
+}
+.left {
+    text-align: left;
+    padding-left: 1vw;
+}
+.bottom {
+    margin-top: 15vw;
+}
+.pile, .stock, .foundation, .cardBack, .cardFront, .tableau, #control {
+    height: 20.4397vw;
+    width: 13.14vw;
+    user-select: none;
+}
+.tableau{
+    height: 76.56vw;
+    top: 22.4397vw;
+}
+.stock, .talon, .foundation{
+    top: 1vw;
+    z-index: -1;
+}
+.shade {
+    background-color: rgb(180,180,255);
+}
+#stock, #tableau1 {left: 1vw;}
+#talon, #tableau2 {left: 15.14vw;}
+#tableau3, #control {left: 29.18vw;}
+#spadeFoundation, #tableau4, #blackspade {left: 43.42vw;}
+#heartFoundation, #tableau5, #redheart {left: 57.56vw;}
+#clubFoundation, #tableau6, #blackclub {left: 71.7vw;}
+#diamondFoundation, #tableau7, #reddiamond {left: 85.84vw;}
+
+@media screen and (min-aspect-ratio: 741 / 741) {
+    /* Transition*/
+    .symbol {
+        font-size: 14vh;
+        width: 13.14vh;
+        margin-top: 1vh;
+        padding-top: 1vh;
+    }
+    .cardBack, .cardFront, .pile, .foundation{
+        height: 20.41160593792173vh;
+        width: 13.12145748987854vh;
+    }
+
+    .foundation, .stock, .talon{
+        top: 1.01872469635628vh;
+        border-radius: 1vh;
+    }
+    .stock, .talon{
+        top: 2.03744939271256vh;
+    }
+    .tableau {top: 23.44905533063429vh;}
+    .cardFront {border-radius: 1vh;}
+    .cardFront h1 {
+        width: 13.12145748987854vh;
+        line-height: 20.4397vh;
+        font-size: 14vh;
+    }
+    .cardFront h2{
+        font-size: 4vh;
+        width: 13.12145748987854vh;
+    }
+    .cardBack{
+        border-radius: 1vh;
+    }
+    .left{
+        padding-left: 1vh;
+    }
+    .right{
+        padding-right: 1vh;
+    }
+    .bottom {
+        margin-top: 15vh;
+    }
+    #stock, #tableau1 {left: calc((100vw - 91.85020242914978vh)/8);}
+    #talon, #tableau2 {left: calc(((100vw - 91.85020242914978vh)/4) + 13.12145748987854vh);}
+    #tableau3 {left: calc(((100vw - 91.85020242914978vh)*.375) + 26.24291497975708vh);}
+    #spadeFoundation, #tableau4, #blackspade {left: calc(((100vw - 91.85020242914978vh)*.5) + 39.36437246963562vh);}
+    #heartFoundation, #tableau5, #redheart{left: calc(((100vw - 91.85020242914978vh)*.625) + 52.48582995951416vh);}
+    #clubFoundation, #tableau6, #blackclub {left: calc(((100vw - 91.85020242914978vh)*.75) + 65.6072874493927vh);}
+    #diamondFoundation, #tableau7, #reddiamond {left: calc(((100vw - 91.85020242914978vh)*.875) + 78.72874493927124vh);}
+}
