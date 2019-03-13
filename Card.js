@@ -14,24 +14,9 @@ class Card {
         return document.getElementById(this.name);
     }
     flip(){
-        let parent = this.element().parentElement;
-        let top = this.element().offsetTop;
-        let left = this.element().offsetLeft;
-        let zIndex = this.element().zIndex;
-        this.events.forEach(stuff=>{
-            this.element().removeEventListener(stuff[0],stuff[1]);
-        })
-        parent.removeChild(this.element());
-
-        this.face = (this.face)?false:true;
-        let newCard = this.render();
-        newCard.top = javAnimate.calcUOM(top,"vw");
-        newCard.left = javAnimate.calcUOM(left,"vw");
-        newCard.zIndex = zIndex;
-        parent.appendChild(newCard);
-        this.events.forEach(stuff=>{
-            this.element().addEventListener(stuff[0],stuff[1]);
-        })
+        (this.face)?this.element().classList.add("cardBack"):this.element().classList.remove("cardBack");
+        (this.face)?this.element().classList.remove("cardFront"):this.element().classList.add("cardFront");
+        this.face = !this.face;
     }
     symbol(){
         switch(this.value){
@@ -49,16 +34,12 @@ class Card {
     }
     render(){
         let me = document.createElement("div");
-        if(this.face){
-            me.innerHTML = `<h2 class="left top" style="color:${this.suite.color};">${this.symbol()}</h3>
-                            <h2 class="right top" style="color:${this.suite.color};">${this.suite.symbol}</h2>                
-                            <h1 style="color:${this.suite.color};">${this.suite.symbol}</h1>
-                            <h2 class="left bottom" style="color:${this.suite.color};">${this.suite.symbol}</h2>
-                            <h2 class="right bottom" style="color:${this.suite.color};">${this.symbol()}</h3>`;
-            me.classList.add("cardFront");
-        } else {
-            me.classList.add("cardBack");
-        }
+        me.innerHTML = `<h2 class="left top" style="color:${this.suite.color};">${this.symbol()}</h3>
+                        <h2 class="right top" style="color:${this.suite.color};">${this.suite.symbol}</h2>                
+                        <h1 style="color:${this.suite.color};">${this.suite.symbol}</h1>
+                        <h2 class="left bottom" style="color:${this.suite.color};">${this.suite.symbol}</h2>
+                        <h2 class="right bottom" style="color:${this.suite.color};">${this.symbol()}</h3>`;
+        (this.face)?me.classList.add("cardFront"):me.classList.add("cardBack");
         me.classList.add("Card");
         me.id = this.name;
         return me;

@@ -52,6 +52,7 @@ body {
 .cardFront h2{
     font-size: 4vw;
     width: 13.14vw;
+    display: block;
     /*user-select: none;*/
 }
 .cardBack{
@@ -62,6 +63,10 @@ body {
     box-shadow: 1px 2px black;
     /*user-select: none;*/
 }
+.cardBack h1, h2 {
+    display: none;
+}
+
 .right {
     text-align: right;
     padding-right: 1vw;
