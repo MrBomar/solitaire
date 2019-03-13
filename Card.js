@@ -13,10 +13,11 @@ class Card {
     element(){
         return document.getElementById(this.name);
     }
-    flip(){
+    flip(history){
         (this.face)?this.element().classList.add("cardBack"):this.element().classList.remove("cardBack");
         (this.face)?this.element().classList.remove("cardFront"):this.element().classList.add("cardFront");
         this.face = !this.face;
+        if(history){solitare.moveHistory.push({action:"flip",card:this,history:false})};
     }
     symbol(){
         switch(this.value){

@@ -51,9 +51,7 @@ class Tableau extends Pile{
     }
     topCardFlip(){
         if(this.cardCount() != 0){
-            if(this.topCard().face == false){
-                solitare.moveCard(this.topCard(),true,"flip",true,true);
-            }
+            if(this.topCard().face == false){this.topCard().flip(true)}
         }
     }
 }
