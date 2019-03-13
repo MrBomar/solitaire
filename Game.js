@@ -13,6 +13,7 @@ const clickEvent = (event) => {
 
 class Game{
     constructor(){
+        this.resize = this.resize.bind(this);
         this.suites = [{suite:"spade", symbol:"♠", color: "black"},
                        {suite:"club", symbol:"♣", color: "black"},
                        {suite:"heart", symbol:"♥", color: "red"},
@@ -41,10 +42,17 @@ class Game{
         this.reStock = this.reStock.bind(this);
         this.clearPriorClick = this.clearPriorClick.bind(this);
         this.findCard = this.findCard.bind(this);
-        this.dealEvent;
+        this.dealEvent; //The variable storing the deal action sequence or Interval
         this.addPileClickEvents = this.addPileClickEvents.bind(this);
         this.addPileClickEvents();
-        this.moveHistory = [];
+        this.moveHistory = []; //Stores moves made, part of the undo function
+        window.addEventListener("resize", this.resize);
+    }
+    resize(){
+        this.allStacks.forEach(stack=>{
+            stack.resize();
+        })
+
     }
     timer(from, to){
         //Calculate the time
@@ -103,7 +111,7 @@ class Game{
         if(history){this.moveHistory.push({action:"move",card:thisCard,to:origStack, history:false})}; //Stores the move in the history
 
         //Capture object's target location -- GOOD
-        let newPOS = {top: toStack.nextCardPOS().top, topUOM: "vh", left: toStack.nextCardPOS().left, leftUOM: "vh"};
+        let newPOS = {top: toStack.nextCardPOS().top, topUOM: "vh", left: toStack.nextCardPOS().left, leftUOM: "vw"};
 
         //Animate the card movement -- GOOD
         let myCard = new MoveObj(thisCard.element(),newPOS,toStack.element(),this.timer(thisCard.element(),toStack.element()),40,true,toStack.cards.length,thisCard.eventListeners());

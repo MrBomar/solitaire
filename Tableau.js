@@ -54,4 +54,15 @@ class Tableau extends Pile{
             if(this.topCard().face == false){this.topCard().flip(true)}
         }
     }
+    resize(){
+        if(this.cards.length != 0){
+            let marginTotal = 0;
+            this.cards.forEach(card=>{
+                card.element().style.top = card.currentStack().element().offsetTop + marginTotal + "px";
+                let baseMargin = card.element().offsetHeight / 4;
+                marginTotal = (card.face)? marginTotal + baseMargin:marginTotal + baseMargin/2;
+                card.element().style.left = this.element().offsetLeft + "px";
+            })
+        }
+    }
 }

@@ -12,6 +12,7 @@ class Pile{
         this.addCard = this.addCard.bind(this);
         this.selectCards = this.selectCards.bind(this);
         this.render = this.render.bind(this);
+        this.resize = this.resize.bind(this);
     }
     element(){
         return document.getElementById(this.name);
@@ -81,5 +82,13 @@ class Pile{
         })
         document.getElementsByTagName("body")[0].appendChild(me);
         //document.getElementById(this.name).addEventListener("click", pileClickEvent);
+    }
+    resize(){
+        if(this.cards.length != 0){
+            this.cards.forEach(card=>{
+                card.element().style.top = card.currentStack().element().offsetTop+ "px";
+                card.element().style.left = this.element().offsetLeft + "px";
+            })
+        }
     }
 }
