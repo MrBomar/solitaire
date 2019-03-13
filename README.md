@@ -6,6 +6,9 @@ Purpose: To enhance my understanding of working with DOM objects.
 
 Design Overview:
 
+Update 03/13/2019 @ 4:35 Eastern --
+    - The card.flip() has been simplified.
+
 Update: 03/12/2019 --
     It's been a few months since I have updated this reposity, but I havn't stopped making progress. Here are the current changes.
     
