@@ -6,6 +6,9 @@ Purpose: To enhance my understanding of working with DOM objects.
 
 Design Overview:
 
+Update 03/13/2019 @ 5:56 Eastern --
+    - The undo function has been perfected and is working properly, will perform more testing as I continue development.
+
 Update 03/13/2019 @ 4:35 Eastern --
     - The card.flip() has been simplified.
 
