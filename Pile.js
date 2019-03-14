@@ -13,6 +13,7 @@ class Pile{
         this.selectCards = this.selectCards.bind(this);
         this.render = this.render.bind(this);
         this.resize = this.resize.bind(this);
+        this.topCardFlip = this.topCardFlip.bind(this);
     }
     element(){
         return document.getElementById(this.name);
@@ -65,11 +66,6 @@ class Pile{
         this.cards.push(aCard);
         document.getElementById(aCard.name).addEventListener("click", clickEvent);
     }
-    flipCard(aCard){
-        aCard.face = (aCard.face)?false:true;
-        aCard.currentStack().element().removeChild(aCard.element());
-        this.addCard(this.removeCard(aCard.name));
-    }
     selectCards(clickedCard){
         return [clickedCard];
     }
@@ -89,6 +85,11 @@ class Pile{
                 card.element().style.top = card.currentStack().element().offsetTop+ "px";
                 card.element().style.left = this.element().offsetLeft + "px";
             })
+        }
+    }
+    topCardFlip(moveID){
+        if(this.cardCount() != 0){
+            if(this.topCard().face == false){this.topCard().flip(true,moveID)}
         }
     }
 }

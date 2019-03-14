@@ -4,7 +4,11 @@ Goal: To create a simple random solitare game using only HTML5, CSS, and Vanilla
 
 Purpose: To enhance my understanding of working with DOM objects.
 
-Design Overview:
+Updates:
+
+Update 03/13/2019 @ 20:07 Eastern --
+    --Redesigned the Undo function to better handle multiple card moves.
+    --Indexed each item in the history so that single moves that effect multiple cards are tied tegether.
 
 Update 03/13/2019 @ 18:51 Easterm --
     - Card placement has been corrected, all cards now move to their appropriate places on resize.

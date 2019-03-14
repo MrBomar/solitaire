@@ -11,7 +11,6 @@ class Tableau extends Pile{
         this.render();
         this.topCardPOS = this.topCardPOS.bind(this);
         this.selectCards = this.selectCards.bind(this);
-        this.topCardFlip = this.topCardFlip.bind(this);
     }
     validateMove(aCard){
         let valid = true;
@@ -48,11 +47,6 @@ class Tableau extends Pile{
     topCardPOS(){
         let myTopCard = (this.cards.length > 0)?this.cards[this.cardCount() -1].element():this.element();
         return {left: myTopCard.offsetLeft, top: myTopCard.offsetTop};
-    }
-    topCardFlip(){
-        if(this.cardCount() != 0){
-            if(this.topCard().face == false){this.topCard().flip(true)}
-        }
     }
     resize(){
         if(this.cards.length != 0){

@@ -6,7 +6,7 @@ const clickEvent = (event) => {
             solitare.cardClickEvent(solitare.findCard(myElement.id));
         } else if (elmClass == "pile"){
             solitare.pileClickEvent(solitare[myElement.id]);
-            console.log("A pile was clicked");
+            console.log(solitare[myElement.id]);
         }
     })
 }
@@ -47,6 +47,8 @@ class Game{
         this.addPileClickEvents();
         this.moveHistory = []; //Stores moves made, part of the undo function
         window.addEventListener("resize", this.resize);
+        this.cardMoveID = this.cardMoveID.bind(this);
+        this.movePriorClick = this.movePriorClick.bind(this);
     }
     resize(){
         this.allStacks.forEach(stack=>{
@@ -105,10 +107,10 @@ class Game{
 
         this.dealEvent = setInterval(this.deal,150);
     }
-    moveCard(thisCard, toStack, history){
+    moveCard(thisCard, toStack, history, count){
         //We will only handle moving a card in this function, flipping the card must be managed outside this function.
-        let origStack = solitare[thisCard.element().parentElement.id]; //Identifies the card's origin
-        if(history){this.moveHistory.push({action:"move",card:thisCard,to:origStack, history:false})}; //Stores the move in the history
+        let origStack = thisCard.currentStack(); //Identifies the card's origin
+        if(history){this.moveHistory.push({action:"move",card:thisCard,to:origStack, history:false, ID:count})}; //Stores the move in the history
 
         //Capture object's target location -- GOOD
         let newPOS = {top: toStack.nextCardPOS().top, topUOM: "vh", left: toStack.nextCardPOS().left, leftUOM: "vw"};
@@ -132,40 +134,46 @@ class Game{
             document.getElementById("undo").style.display = "none";
         }
     }
-    reStock(){
+    movePriorClick(toPile){
+        //Will transfer the priorClick.length to the moveCar()
+        //moveCard will store the priorClick.length
+        //Undo will then use the priorClick.length to move the correct number of cards
+        //Remember to move the bottom card first.
+        let fromPile = this.priorClick[0].currentStack();
+        let currentID = this.cardMoveID();
         do {
-            this.moveCard(this.talon.topCard(), false, this.stock,true,true);
-        } while (this.talon.cardCount() != 0);
+            let myCard = this.priorClick.shift();
+            this.moveCard(myCard,toPile,true,currentID);
+            if((fromPile instanceof Talon)&&(toPile instanceof Stock)){myCard.flip(true,currentID)}
+        } while (this.priorClick.length > 0)
+        solitare.clearPriorClick();                                //Clear the selected cards
+        if (fromPile instanceof Tableau){fromPile.topCardFlip(currentID)}   //If from Pile is Tableau then flip top Card
+        if (toPile instanceof Talon){toPile.topCardFlip(currentID)}       //If to Pile is Talon then flip Talon top Card 
+    }
+    cardMoveID(){
+        return this.moveHistory.length;
+    }
+    reStock(){
+        this.talon.cards.reverse();
+        this.talon.cards.forEach(card=>{this.priorClick.push(card)});
+        this.movePriorClick(this.stock);
     }
     cardClickEvent(clickedCard){
         //Capture cards affected by this click
         let selectedStack = clickedCard.currentStack();
         let selectedCards = selectedStack.selectCards(clickedCard);
 
-        //There are two different card click actions depending on their Pile type
-            //Clicking a card in the Stock
-            //Clicking a card in any other Pile
-        if(selectedStack.name == "stock"){                                 //Stock card arguments
-            
-            this.clearPriorClick();                                        //Deselect any selected cards
-            this.moveCard(solitare.stock.topCard(), solitare.talon, true); //Move the card
-            solitare.talon.topCard().flip(true);                           //Flip the card
-        
-        } else if (solitare.priorClick.length != 0){                       //Pile card arguments if Cards were previously selected
-
-            let fromPile = solitare.priorClick[0].currentStack();         //Store selected Cards origin Pile
+        if(selectedStack.name == "stock"){                                 //Stock card clicked 
+            this.priorClick = [this.stock.topCard()];                           //Add the top Stock Card to the priorClick
+            this.movePriorClick(this.talon);                                    //Execute moving of all cards in PriorClick
+        } else if (solitare.priorClick.length != 0){                       //All other Pile card clicks if Cards were previously selected
             if(selectedStack.validateMove(solitare.priorClick[0])){        //If selected cards can be moved to clicked Pile
-                
-                solitare.priorClick.forEach(x =>{solitare.moveCard(x,selectedStack,true);}) //Move the selected cards
-                solitare.clearPriorClick();                                                 //Clear the selected cards
-                if (fromPile instanceof Tableau){fromPile.topCardFlip()}                    //If from Pile is Tableau then flip top Card
+                this.movePriorClick(selectedStack);                             //Execute moving of all cards in PriorClick
             } else {                                                       //If selected cards cannot be moved to the clicked pile.
-
-                solitare.clearPriorClick();                                //Clear the selected cards
+                solitare.clearPriorClick();                                     //Clear the selected cards
             }
         } else {
             //Action taken if no other cards were previously selected.
-
             solitare.priorClick = selectedCards;
             solitare.shade(solitare.priorClick);
         }
@@ -173,18 +181,10 @@ class Game{
         event.stopPropagation(); //Stops the event
     }
     pileClickEvent(clickedPile){
-        //Only pile clicks are managed here
-        //So we only need to deal with pile clicks here.
-
         if(this.priorClick.length != 0){
-            let storedCardInfo = solitare.priorClick[0].currentStack();
+            let fromPile = solitare.priorClick[0].currentStack();
             if(clickedPile.validateMove(solitare.priorClick[0])){
-                //Action taken if previously selected cards can be moved to clicked stack.
-                solitare.priorClick.forEach(x =>{
-                    solitare.moveCard(x,clickedPile,true);
-                })
-                solitare.clearPriorClick();
-                if (storedCardInfo.constructor.name == "Tableau"){storedCardInfo.topCardFlip()}
+                this.movePriorClick(clickedPile);
             } else {
                 //Action taken if the previously selected cards cannot be moved to the clicked stack.
                 solitare.clearPriorClick();
@@ -214,7 +214,7 @@ class Game{
         })
     }
     clearPriorClick(){
-        this.unShade(this.priorClick);
+        this.allStacks.forEach(pile=>{this.unShade(pile.cards)})
         this.priorClick = [];
     }
     findCard(cardName){
@@ -239,14 +239,14 @@ class Game{
     undo(){
         //The beginning of the Undo event.
         if(this.moveHistory.length > 0){
-            let undomove = this.moveHistory.pop();
-            if(undomove.action == "flip"){
-                undomove.card.flip(undomove.history)
-                this.undo();
-            } else {
-                this.moveCard(undomove.card,undomove.to,undomove.history)
-            }
-            //(undomove.action=="flip")?undomove.card.flip(undomove.history):this.moveCard(undomove.card,undomove.to,undomove.history);
+            let currentID = this.moveHistory[this.moveHistory.length-1].ID;
+            let undoMoves = this.moveHistory.filter((move)=>{return move.ID == currentID})
+            this.moveHistory.splice(this.moveHistory.length - undoMoves.length,undoMoves.length);
+            if(undoMoves[0].to instanceof Talon){undoMoves.reverse()};
+            if(undoMoves[undoMoves.length-1].action == "flip"){undoMoves.unshift(undoMoves.pop())};
+            undoMoves.forEach(move=>{
+                (move.action == "flip")?move.card.flip(move.history):this.moveCard(move.card,move.to,move.history);
+            })
         }
     }
     done(){
