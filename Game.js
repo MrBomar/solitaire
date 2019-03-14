@@ -6,7 +6,6 @@ const clickEvent = (event) => {
             solitare.cardClickEvent(solitare.findCard(myElement.id));
         } else if (elmClass == "pile"){
             solitare.pileClickEvent(solitare[myElement.id]);
-            console.log(solitare[myElement.id]);
         }
     })
 }
@@ -44,11 +43,14 @@ class Game{
         this.findCard = this.findCard.bind(this);
         this.dealEvent; //The variable storing the deal action sequence or Interval
         this.addPileClickEvents = this.addPileClickEvents.bind(this);
+        this.tableauCycle = this.tableauCycle.bind(this);
         this.addPileClickEvents();
         this.moveHistory = []; //Stores moves made, part of the undo function
         window.addEventListener("resize", this.resize);
         this.cardMoveID = this.cardMoveID.bind(this);
         this.movePriorClick = this.movePriorClick.bind(this);
+        this.talonCycle = this.talonCycle.bind(this);
+        this.foundationMatch = this.foundationMatch.bind(this);
     }
     resize(){
         this.allStacks.forEach(stack=>{
@@ -121,11 +123,6 @@ class Game{
 
         //Perform the card object movement manually here -- GOOD
         toStack.cards.push(origStack.removeCard(thisCard.name));
-        
-        //Check to see if the game has been solved
-        if(this.done()==true){
-            document.getElementById("solve").display = "block";
-        }
 
         //Toggle the undo button
         if(this.moveHistory.length > 0){
@@ -148,7 +145,8 @@ class Game{
         } while (this.priorClick.length > 0)
         solitare.clearPriorClick();                                //Clear the selected cards
         if (fromPile instanceof Tableau){fromPile.topCardFlip(currentID)}   //If from Pile is Tableau then flip top Card
-        if (toPile instanceof Talon){toPile.topCardFlip(currentID)}       //If to Pile is Talon then flip Talon top Card 
+        if (toPile instanceof Talon){toPile.topCardFlip(currentID)}       //If to Pile is Talon then flip Talon top Card
+        this.done(); //Runs code to check for a win.
     }
     cardMoveID(){
         return this.moveHistory.length;
@@ -158,7 +156,7 @@ class Game{
         this.talon.cards.forEach(card=>{this.priorClick.push(card)});
         this.movePriorClick(this.stock);
     }
-    cardClickEvent(clickedCard){
+    cardClickEvent(clickedCard, wasTriggered){
         //Capture cards affected by this click
         let selectedStack = clickedCard.currentStack();
         let selectedCards = selectedStack.selectCards(clickedCard);
@@ -178,9 +176,9 @@ class Game{
             solitare.shade(solitare.priorClick);
         }
         
-        event.stopPropagation(); //Stops the event
+        if(!wasTriggered){event.stopPropagation()}; //Stops the event
     }
-    pileClickEvent(clickedPile){
+    pileClickEvent(clickedPile, wasTriggered){
         if(this.priorClick.length != 0){
             let fromPile = solitare.priorClick[0].currentStack();
             if(clickedPile.validateMove(solitare.priorClick[0])){
@@ -194,7 +192,7 @@ class Game{
         if(clickedPile.name == "stock"){this.reStock()};
 
         //Insterted to stop the parent DIV from attempting to handle the click.
-        event.stopPropagation();
+        if(!wasTriggered){event.stopPropagation()}
     }
     randomizeArray(myArray){
         let newArray = [];
@@ -208,13 +206,8 @@ class Game{
             x.element().classList.add("shade");
         })
     }
-    unShade(cardArray){
-        cardArray.forEach(x =>{
-            x.element().classList.remove('shade');
-        })
-    }
     clearPriorClick(){
-        this.allStacks.forEach(pile=>{this.unShade(pile.cards)})
+        Array.from(document.getElementsByClassName("shade")).forEach(item=>{item.classList.remove('shade')});
         this.priorClick = [];
     }
     findCard(cardName){
@@ -263,24 +256,46 @@ class Game{
     }
     solve(){
         do {
-            
+            this.tableauCycle();
+            this.talonCycle();
         } while (this.cardsOnBoard());
     }
     cardsOnBoard(){
-        this.allStacks.forEach(stck=>{
-            if(stck.cards.length > 0){
-                return true;
-            }
-        })
-        return false;
+        let result = false;
+        let myPiles = Array.from(this.tableau);
+        myPiles.push(this.stock,this.talon);
+        myPiles.forEach(pile=>{if(pile.cards.length > 0){result = true}});
+        return result;
     }
     tableauCycle(){
-        complete = true;
-        do {
-            this.tableau.forEach(tab=>{
-                tab.topCard()
-            })
-        } while (complete == false);
+        let tabs = this.tableau.filter((tab)=>{return tab.cards.length > 0 });
+        let found = false;
+        tabs.forEach(tab=>{
+            let myFoundation = this.foundationMatch(tab.topCard());
+            if(myFoundation.validateMove(tab.topCard())){
+                found = true;
+                this.cardClickEvent(tab.topCard(),true);
+                this.pileClickEvent(myFoundation,true);
+            }
+        })
+        if(found){this.tableauCycle()};
+    }
+    talonCycle(){
+        if((this.talon.cards.length == 0) && (this.stock.cards.length == 0)){
+            return;
+        } else if (this.talon.cards.length == 0){
+            this.cardClickEvent(this.stock.topCard(),true);
+        }
+        let myFoundation = this.foundationMatch(this.talon.topCard());
+        if(myFoundation.validateMove(this.talon.topCard())){
+            this.cardClickEvent(this.talon.topCard(),true);
+            (myFoundation.cards.length == 0)?this.pileClickEvent(myFoundation,true):this.cardClickEvent(myFoundation.topCard(),true);
+        } else {
+            (this.stock.cards.length == 0)?this.pileClickEvent(this.stock,true):this.cardClickEvent(this.stock.topCard(),true);
+        }
+    }
+    foundationMatch(aCard){
+        return this.foundations.find(pile=>pile.suite == aCard.suite.suite);
     }
 }
 

@@ -6,6 +6,9 @@ Purpose: To enhance my understanding of working with DOM objects.
 
 Updates:
 
+Update 03/14/2019 @ 02.04 Eastern --
+    --Added auto solve feature
+
 Update 03/13/2019 @ 20:07 Eastern --
     --Redesigned the Undo function to better handle multiple card moves.
     --Indexed each item in the history so that single moves that effect multiple cards are tied tegether.
