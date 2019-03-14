@@ -1,13 +1,50 @@
-const clickEvent = (event) => {
-    let myElement = event.currentTarget;
-    let myElementClasses = myElement.classList; 
+const doubleclick = (event) => {
+    let el = document.getElementById(event.currentTarget.id);
+    event.stopPropagation();
+    if(el.getAttribute("data-dblclick") == null){
+        el.setAttribute("data-dblclick", 1);
+        setTimeout(()=>{
+            if(el.getAttribute("data-dblclick") == 1){
+                clickEvent(el);
+            }
+            el.removeAttribute("data-dblclick");
+            el = "";
+        }, 170);
+    } else {
+        el.removeAttribute("data-dblclick");
+        dblClickEvent(el);
+        el = "";
+    }
+}
+
+const clickEvent = (el) => {
+    console.log("click");
+    let myElement = el;
+    let myElementClasses = myElement.classList;   
     myElementClasses.forEach(elmClass =>{
         if(elmClass == "Card"){
-            solitare.cardClickEvent(solitare.findCard(myElement.id));
+            solitare.cardClickEvent(solitare.findCard(myElement.id),true);
         } else if (elmClass == "pile"){
-            solitare.pileClickEvent(solitare[myElement.id]);
+            solitare.pileClickEvent(solitare[myElement.id],true);
         }
     })
+}
+
+const dblClickEvent = (el) => {
+    console.log("dblClick");
+    myElement = el;
+    console.log(myElement);
+    let myCard = solitare.findCard(myElement.id);
+    if(myCard.currentStack() instanceof Stock){
+        solitare.cardClickEvent(myCard,true);
+    } else if(myCard.currentStack().topCard() == myCard){
+        let myStack = Array.from(solitare.tableau).concat(solitare.foundations).find(stack=>stack.validateMove(myCard));
+        if(myStack === undefined){          
+        } else {
+            solitare.cardClickEvent(myCard,true);
+            solitare.pileClickEvent(myStack,true);
+        }
+    }
 }
 
 class Game{
@@ -66,9 +103,21 @@ class Game{
         return (positive(x) > positive(y))?positive(x):positive(y);
     }
     addPileClickEvents(){
-        let myArray = Array.from(document.getElementsByTagName("body")[0].children);
+        let allChildren = Array.from(document.getElementsByTagName("body")[0].children);
+        let myArray = allChildren.filter((item=>{return Array.from(item.classList).find((clss=>{
+            switch(clss){
+                case "tableau":
+                case "stock":
+                case "foundation":
+                case "talon":
+                    return clss;
+                default:
+                    return false;
+            }
+        }))}))
         myArray.forEach(obj =>{
-            obj.addEventListener("click", clickEvent);
+            //obj.addEventListener("click", clickEvent);
+            obj.addEventListener("click", doubleclick);
         })
     }
     newGame(){
@@ -118,7 +167,7 @@ class Game{
         let newPOS = {top: toStack.nextCardPOS().top, topUOM: "vh", left: toStack.nextCardPOS().left, leftUOM: "vw"};
 
         //Animate the card movement -- GOOD
-        let myCard = new MoveObj(thisCard.element(),newPOS,toStack.element(),this.timer(thisCard.element(),toStack.element()),40,true,toStack.cards.length,thisCard.eventListeners());
+        let myCard = new MoveObj(thisCard.element(),newPOS,toStack.element(),this.timer(thisCard.element(),toStack.element()),40,true,toStack.cards.length,thisCard.events);
         myCard.begin();
 
         //Perform the card object movement manually here -- GOOD

@@ -8,7 +8,7 @@ class Card {
         this.element = this.element.bind(this);
         this.symbol = this.symbol.bind(this);
         this.render = this.render.bind(this);
-        this.events = [["click", clickEvent]];
+        this.events = [["click", doubleclick]];
     }
     element(){
         return document.getElementById(this.name);
@@ -50,10 +50,5 @@ class Card {
     }
     currentStack(){
         return solitare[this.element().parentElement.id];
-    }
-    eventListeners(){
-        return [
-            ["click", clickEvent]
-        ]
     }
 }

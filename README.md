@@ -6,6 +6,10 @@ Purpose: To enhance my understanding of working with DOM objects.
 
 Updates:
 
+Update 03/14/2019 @ 05:29 Eastern --
+    --Added a double click feature, but there is a bug.
+    --After clicking the stock, regardless of the delay the talon click is handled as a double click.
+
 Update 03/14/2019 @ 02.04 Eastern --
     --Added auto solve feature
 
@@ -23,9 +27,9 @@ Update 03/13/2019 @ 16:35 Eastern --
     - The card.flip() has been simplified.
 
 Update: 03/12/2019 --
-    It's been a few months since I have updated this reposity, but I havn't stopped making progress. Here are the current changes.
+    It's been a few months since I have updated this repository, but I havn't stopped making progress. Here are the current changes.
     
-        - Play control has been shifted to the solitair.js
+        - Play control has been shifted to the Game.js
         
         - Animation is now controlled by a seperate class I am calling javAnimate.
         

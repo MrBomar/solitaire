@@ -64,7 +64,7 @@ class Pile{
         renderedCard.style.top = `${this.nextCardPOS().top}px`;
         this.element().appendChild(renderedCard);
         this.cards.push(aCard);
-        document.getElementById(aCard.name).addEventListener("click", clickEvent);
+        aCard.events.forEach(item=>{aCard.element().addEventListener(item[0],item[1])})
     }
     selectCards(clickedCard){
         return [clickedCard];
@@ -77,7 +77,6 @@ class Pile{
             me.classList.add(cssClass);
         })
         document.getElementsByTagName("body")[0].appendChild(me);
-        //document.getElementById(this.name).addEventListener("click", pileClickEvent);
     }
     resize(){
         if(this.cards.length != 0){
