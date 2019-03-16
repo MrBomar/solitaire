@@ -349,3 +349,16 @@ class Game{
 }
 
 let solitare = new Game;
+const saveGameState = () =>{
+    //Experiment with storing game state
+    let gameState = [];
+    solitare.allStacks.forEach(pile=>{gameState.push({pile:pile.name,cards:[]})});
+    gameState.forEach(pile=>{
+        solitare[pile.pile].cards.forEach(card=>{
+            pile.cards.push({name:card.name,value:card.value,suite:card.suite,face:card.face});
+        });
+    })
+    let newString = JSON.stringify(gameState);
+    console.log(newString);
+    console.log(newString.JSON())
+}
