@@ -6,6 +6,14 @@ Purpose: To enhance my understanding of working with DOM objects.
 
 Updates:
 
+Update 03/22/2019 @ 19:03 Eastern --
+    --Found a problem with attaching click events to moved DIV elements. Revised the click event and attached
+      it to the entire document.
+    --Unfortunatly this resets my double click solution, will have to rework it.
+    --This solution includes my first ever recursive function.
+    --Also added new function to store the shuffled deck within the Game.
+    --Added new test function to transmit the shuffled deck to the server upon successfull completion of the deck.
+
 Update 03/14/2019 @ 05:29 Eastern --
     --Added a double click feature, but there is a bug.
     --After clicking the stock, regardless of the delay the talon click is handled as a double click.

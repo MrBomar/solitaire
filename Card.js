@@ -8,7 +8,7 @@ class Card {
         this.element = this.element.bind(this);
         this.symbol = this.symbol.bind(this);
         this.render = this.render.bind(this);
-        this.events = [["click", doubleclick]];
+        this.events = [];
     }
     element(){
         return document.getElementById(this.name);
@@ -42,6 +42,8 @@ class Card {
                         <h2 class="right bottom" style="color:${this.suite.color};">${this.symbol()}</h3>`;
         (this.face)?me.classList.add("cardFront"):me.classList.add("cardBack");
         me.classList.add("Card");
+        me.classList.add("cardClick");
+        me.classList.add ("clickable");
         me.id = this.name;
         return me;
     }

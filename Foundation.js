@@ -6,7 +6,7 @@ class Foundation extends Pile{
         this.name = `${suite.suite}Foundation`;
         this.color = `${suite.color}`;
         this.symbol = `${suite.symbol}`;
-        this.classList = ["pile", "foundation", "symbol"];
+        this.classList = ["pile", "foundation", "symbol", "pileClick", "clickable"];
         this.render = this.render.bind(this);
         this.suite = suite.suite;
         this.render();

@@ -3,7 +3,7 @@ class Stock extends Pile{
         super();
         this.name = name;
         this.element = this.element.bind(this);
-        this.classList = ["pile","stock"];
+        this.classList = ["pile", "stock", "pileClick", "clickable"];
         this.render = this.render.bind(this);
         this.validateMove = this.validateMove.bind(this);
         this.render();

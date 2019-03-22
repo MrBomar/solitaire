@@ -6,7 +6,7 @@ class Tableau extends Pile{
         this.limit = limit;
         this.name = String(name) + String(limit);
         this.addCard = this.addCard.bind(this);
-        this.classList = ["pile", "tableau"];
+        this.classList = ["pile", "tableau", "pileClick", "clickable"];
         this.render = this.render.bind(this);
         this.render();
         this.topCardPOS = this.topCardPOS.bind(this);

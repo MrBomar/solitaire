@@ -4,7 +4,7 @@ class Talon extends Pile{
     constructor(name){
         super();
         this.name = name;
-        this.classList = ["pile", "talon"];
+        this.classList = ["pile", "talon", "pileClick", "clickable"];
         this.dealMe = this.dealMe.bind(this);
         this.validateMove = this.validateMove.bind(this);
         this.render = this.render.bind(this);
