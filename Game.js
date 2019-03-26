@@ -349,3 +349,4 @@ const saveGameState = () =>{
 }
 
 document.addEventListener("click", clickEvent);
+window.addEventListener("resize", solitare.resize);

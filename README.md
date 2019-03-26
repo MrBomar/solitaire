@@ -6,6 +6,10 @@ Purpose: To enhance my understanding of working with DOM objects.
 
 Updates:
 
+Update 03/26/2019 @ 12:45 Eastern --
+    --Corrected the control buttons sizing and spacing.
+    --Corrected the resize function.
+
 Update 03/22/2019 @ 19:03 Eastern --
     --Found a problem with attaching click events to moved DIV elements. Revised the click event and attached
       it to the entire document.

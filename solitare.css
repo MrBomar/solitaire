@@ -15,12 +15,12 @@ body {
 /*Portrait View*/
 
 #control button {
-     width: 12vw;
+     width: 90%;
      display: block;
      position: static;
-     margin-top: 2.8vw;
-     margin-left: .5vw;
-     height: 2.8vw;
+     margin-top: 8%;
+     margin-left: 5%;
+     height: 25%;
 }
 
 .symbol {
@@ -78,7 +78,7 @@ body {
 .bottom {
     margin-top: 15vw;
 }
-.pile, .stock, .foundation, .cardBack, .cardFront, .tableau, #control {
+.pile, .stock, .foundation, .cardBack, .cardFront, #control {
     height: 20.4397vw;
     width: 13.14vw;
     user-select: none;
@@ -110,12 +110,13 @@ body {
         margin-top: 1vh;
         padding-top: 1vh;
     }
-    .cardBack, .cardFront, .pile, .foundation{
+    .stock, .cardBack, .cardFront, .pile, .foundation, #control{
         height: 20.41160593792173vh;
         width: 13.12145748987854vh;
+        user-select: none;
     }
 
-    .foundation, .stock, .talon{
+    .foundation, .stock, .talon, #control{
         top: 1.01872469635628vh;
         border-radius: 1vh;
     }
@@ -147,7 +148,7 @@ body {
     }
     #stock, #tableau1 {left: calc((100vw - 91.85020242914978vh)/8);}
     #talon, #tableau2 {left: calc(((100vw - 91.85020242914978vh)/4) + 13.12145748987854vh);}
-    #tableau3 {left: calc(((100vw - 91.85020242914978vh)*.375) + 26.24291497975708vh);}
+    #tableau3, #control {left: calc(((100vw - 91.85020242914978vh)*.375) + 26.24291497975708vh);}
     #spadeFoundation, #tableau4, #blackspade {left: calc(((100vw - 91.85020242914978vh)*.5) + 39.36437246963562vh);}
     #heartFoundation, #tableau5, #redheart{left: calc(((100vw - 91.85020242914978vh)*.625) + 52.48582995951416vh);}
     #clubFoundation, #tableau6, #blackclub {left: calc(((100vw - 91.85020242914978vh)*.75) + 65.6072874493927vh);}
