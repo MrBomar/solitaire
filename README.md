@@ -6,8 +6,12 @@ Purpose: To enhance my understanding of working with DOM objects and application
 
 Updates:
 
+Update 04/07/2019 # ??? Eastern --
+    --Enhanced menu bar activation/deactivation
+    --Corrected card alignment on resize and rotation
 
-Update ??? @ ??? Eastern --
+
+Update 4/7/2019 @ 18:30 Eastern --
     --Added a popout menu.
     --Changed the game state to an array and updated functions to handle array of games.
     --Changed the Foundation so that it doesn't auto render.

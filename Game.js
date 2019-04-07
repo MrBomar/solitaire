@@ -13,8 +13,6 @@ let clickEvent = (event) => {
         return;
     }
     let clickClasses = [
-        {text:"newGameClick",exec:currentGame().newGame},
-        {text:"undoClick",exec:currentGame().undo},
         {text:"solveClick",exec:currentGame().solve},
         {text:"cardClick",exec:currentGame().cardClickEvent},
         {text:"pileClick",exec:currentGame().pileClickEvent}
@@ -25,6 +23,7 @@ let clickEvent = (event) => {
             return;
         }
     })
+    if(navBar.open) navBar.deActivate();
 }
 
 class Solitaire{
@@ -166,9 +165,6 @@ class Solitaire{
 
         //Perform the card object movement manually here -- GOOD
         toStack.cards.push(origStack.removeCard(thisCard.name));
-
-        //Toggle the undo button
-        document.getElementById("undo").style.display = (this.moveHistory.length > 0)?"block":"none";
     }
     movePriorClick(toPile){
         //Will transfer the priorClick.length to the moveCar()
@@ -367,8 +363,12 @@ const saveGameState = () =>{
 }
 
 const currentGameResize = () => {
-    currentGame().resize;
+    if(games.length>0){
+        console.log('Resize Fired');
+        currentGame().resize()
+    }
 }
 
 document.getElementsByTagName("main")[0].addEventListener("click", clickEvent);
 window.addEventListener("resize", currentGameResize);
+window.addEventListener("orientationchange", currentGameResize);
