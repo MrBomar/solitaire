@@ -8,13 +8,16 @@ let isClickable = (obj) => {
 let clickEvent = (event) => {
     let item = isClickable(event.target);
     event.stopPropagation();
-    if(item === false){return;}
+    if(item === false){
+        (navBar.open)?navBar.deActivate():navBar.activate();
+        return;
+    }
     let clickClasses = [
-        {text:"newGameClick",exec:solitare.newGame},
-        {text:"undoClick",exec:solitare.undo},
-        {text:"solveClick",exec:solitare.solve},
-        {text:"cardClick",exec:solitare.cardClickEvent},
-        {text:"pileClick",exec:solitare.pileClickEvent}
+        {text:"newGameClick",exec:currentGame().newGame},
+        {text:"undoClick",exec:currentGame().undo},
+        {text:"solveClick",exec:currentGame().solve},
+        {text:"cardClick",exec:currentGame().cardClickEvent},
+        {text:"pileClick",exec:currentGame().pileClickEvent}
     ];
     clickClasses.forEach(obj=>{
         if(Array.from(item.classList).includes(obj.text)){
@@ -24,7 +27,7 @@ let clickEvent = (event) => {
     })
 }
 
-class Game{
+class Solitaire{
     constructor(){
         this.resize = this.resize.bind(this);
         this.suites = [{suite:"spade", symbol:"♠", color: "black"},
@@ -67,12 +70,13 @@ class Game{
         this.sendSolvedDeck = this.sendSolvedDeck.bind(this);
         this.undo = this.undo.bind(this);
         this.solve = this.solve.bind(this);
+        this.won = false;
     }
     toHex(num){
         return "0123456789ABCDEF".charAt(num)
     }
     storeStock(){
-        solitare.stock.cards.forEach(card=>{
+        currentGame().stock.cards.forEach(card=>{
             this.storedStock = this.storedStock + `${card.name.charAt(0)}${this.toHex(card.value)}`;
         })
     }
@@ -89,17 +93,28 @@ class Game{
         let positive = (z) => {return (z<0)?z*-1:z;};
         return (positive(x) > positive(y))?positive(x):positive(y);
     }
-    newGame(){
-        //Clear the playing board.
-        this.allStacks.forEach(stack =>{
-            stack.cards.forEach(thisCard => {
-                document.getElementById(stack.name).removeChild(thisCard.element());
-            })
-            stack.cards = [];
+    clearBoard(){
+        //This function removes all the card elements and the foundation placeholders
+
+        //Cycle through all stacks and remove the card DOM elements.
+        this.allStacks.forEach(myStack=>{
+            if(myStack.cards.length>0){
+                myStack.cards.forEach(myCard=>{
+                    myCard.element().parentElement.removeChild(myCard.element());
+                })
+            }
         })
 
-        //Empty the move history
-        this.moveHistory = [];
+        //Cycle through the foundations and remove the DOM elements.
+        this.foundations.forEach(foundation=>{
+            foundation.element().parentElement.removeChild(foundation.element());
+        })
+    }
+    newGame(){
+        //Render Foundations
+        this.foundations.forEach(foundation=>{
+            foundation.render();
+        })
 
         //Now that the table has been cleared, we can build the deck.
         let tempDeck = [];
@@ -139,18 +154,21 @@ class Game{
         let newPOS = {top: toStack.nextCardPOS().top, topUOM: "vh", left: toStack.nextCardPOS().left, leftUOM: "vw"};
 
         //Animate the card movement -- GOOD
-        let myCard = new MoveObj(thisCard.element(),newPOS,toStack.element(),this.timer(thisCard.element(),toStack.element()),40,true,toStack.cards.length,thisCard.events);
+        let myCard = new MoveObj(
+            thisCard.element(), //The DOM object to be moved
+            newPOS,toStack.element(), //The DIV we wish to add the element to
+            this.timer(thisCard.element(),toStack.element()), //Adjusting the duration of animation based on distance
+            40, //Frames per second
+            true, //Keep the element on top of all other elements during animation
+            toStack.cards.length, //The final z-index of the DOM object
+            thisCard.events); //Array of click events to be reattached to the DOM object
         myCard.begin();
 
         //Perform the card object movement manually here -- GOOD
         toStack.cards.push(origStack.removeCard(thisCard.name));
 
         //Toggle the undo button
-        if(this.moveHistory.length > 0){
-            document.getElementById("undo").style.display = "block";
-        } else {
-            document.getElementById("undo").style.display = "none";
-        }
+        document.getElementById("undo").style.display = (this.moveHistory.length > 0)?"block":"none";
     }
     movePriorClick(toPile){
         //Will transfer the priorClick.length to the moveCar()
@@ -164,7 +182,7 @@ class Game{
             this.moveCard(myCard,toPile,true,currentID);
             if((fromPile instanceof Talon)&&(toPile instanceof Stock)){myCard.flip(true,currentID)}
         } while (this.priorClick.length > 0)
-        solitare.clearPriorClick();                                //Clear the selected cards
+        currentGame().clearPriorClick();                                //Clear the selected cards
         if (fromPile instanceof Tableau){fromPile.topCardFlip(currentID)}   //If from Pile is Tableau then flip top Card
         if (toPile instanceof Talon){toPile.topCardFlip(currentID)}       //If to Pile is Talon then flip Talon top Card
         this.done(); //Runs code to check for a win.
@@ -179,47 +197,42 @@ class Game{
     }
     cardClickEvent(cardID){
         //Find the card
-        let clickedCard = solitare.findCard(cardID);
+        let clickedCard = currentGame().findCard(cardID);
 
         //Capture cards affected by this click
         let selectedStack = clickedCard.currentStack();
         let selectedCards = selectedStack.selectCards(clickedCard);
 
         if(selectedStack.name == "stock"){                                 //Stock card clicked 
-            solitare.priorClick = [solitare.stock.topCard()];                           //Add the top Stock Card to the priorClick
-            solitare.movePriorClick(solitare.talon);                                    //Execute moving of all cards in PriorClick
-        } else if (solitare.priorClick.length != 0){                       //All other Pile card clicks if Cards were previously selected
-            if(selectedStack.validateMove(solitare.priorClick[0])){        //If selected cards can be moved to clicked Pile
-                solitare.movePriorClick(selectedStack);                             //Execute moving of all cards in PriorClick
+            currentGame().priorClick = [currentGame().stock.topCard()];                           //Add the top Stock Card to the priorClick
+            currentGame().movePriorClick(currentGame().talon);                                    //Execute moving of all cards in PriorClick
+        } else if (currentGame().priorClick.length != 0){                       //All other Pile card clicks if Cards were previously selected
+            if(selectedStack.validateMove(currentGame().priorClick[0])){        //If selected cards can be moved to clicked Pile
+                currentGame().movePriorClick(selectedStack);                             //Execute moving of all cards in PriorClick
             } else {                                                       //If selected cards cannot be moved to the clicked pile.
-                solitare.clearPriorClick();                                     //Clear the selected cards
+                currentGame().clearPriorClick();                                     //Clear the selected cards
             }
         } else {
             //Action taken if no other cards were previously selected.
-            solitare.priorClick = selectedCards;
-            solitare.shade(solitare.priorClick);
+            currentGame().priorClick = selectedCards;
+            currentGame().shade(currentGame().priorClick);
         }
-        
-        //if(!wasTriggered){event.stopPropagation()}; //Stops the event
     }
     pileClickEvent(pileID){
         //Select clicked pile
-        let clickedPile = solitare[pileID];
+        let clickedPile = currentGame()[pileID];
 
-        if(solitare.priorClick.length != 0){
-            let fromPile = solitare.priorClick[0].currentStack();
-            if(clickedPile.validateMove(solitare.priorClick[0])){
-                solitare.movePriorClick(clickedPile);
+        if(currentGame().priorClick.length != 0){
+            let fromPile = currentGame().priorClick[0].currentStack();
+            if(clickedPile.validateMove(currentGame().priorClick[0])){
+                currentGame().movePriorClick(clickedPile);
             } else {
                 //Action taken if the previously selected cards cannot be moved to the clicked stack.
-                solitare.clearPriorClick();
+                currentGame().clearPriorClick();
             }
         }
 
-        if(clickedPile.name == "stock"){solitare.reStock()};
-
-        //Insterted to stop the parent DIV from attempting to handle the click.
-        //if(!wasTriggered){event.stopPropagation()}
+        if(clickedPile.name == "stock"){currentGame().reStock()};
     }
     randomizeArray(myArray){
         let newArray = [];
@@ -278,7 +291,13 @@ class Game{
                 }
             })
         })
-        document.getElementById("solve").style.display = (complete)?"block":"none";
+
+        if(complete && !won){
+            won = true;
+            //this.sendSolvedDeck();
+            document.getElementById("solve").style.display = "block";
+        }
+
         return complete;
     }
     solve(){
@@ -333,13 +352,12 @@ class Game{
     }
 }
 
-let solitare = new Game;
 const saveGameState = () =>{
     //Experiment with storing game state
     let gameState = [];
-    solitare.allStacks.forEach(pile=>{gameState.push({pile:pile.name,cards:[]})});
+    currentGame().allStacks.forEach(pile=>{gameState.push({pile:pile.name,cards:[]})});
     gameState.forEach(pile=>{
-        solitare[pile.pile].cards.forEach(card=>{
+        currentGame()[pile.pile].cards.forEach(card=>{
             pile.cards.push({name:card.name,value:card.value,suite:card.suite,face:card.face});
         });
     })
@@ -348,5 +366,9 @@ const saveGameState = () =>{
     console.log(newString.length)
 }
 
-document.addEventListener("click", clickEvent);
-window.addEventListener("resize", solitare.resize);
+const currentGameResize = () => {
+    currentGame().resize;
+}
+
+document.getElementsByTagName("main")[0].addEventListener("click", clickEvent);
+window.addEventListener("resize", currentGameResize);

@@ -17,7 +17,7 @@ class Card {
         (this.face)?this.element().classList.add("cardBack"):this.element().classList.remove("cardBack");
         (this.face)?this.element().classList.remove("cardFront"):this.element().classList.add("cardFront");
         this.face = !this.face;
-        if(history){solitare.moveHistory.push({action:"flip",card:this,history:false, ID:moveID})};
+        if(history){currentGame().moveHistory.push({action:"flip",card:this,history:false, ID:moveID})};
     }
     symbol(){
         switch(this.value){
@@ -51,6 +51,6 @@ class Card {
         return {top: this.element().offsetTop, left: this.element().offsetLeft};
     }
     currentStack(){
-        return solitare[this.element().parentElement.id];
+        return currentGame()[this.element().parentElement.id];
     }
 }

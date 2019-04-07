@@ -76,7 +76,7 @@ class Pile{
         this.classList.forEach(cssClass => {
             me.classList.add(cssClass);
         })
-        document.getElementsByTagName("body")[0].appendChild(me);
+        document.getElementsByTagName("main")[0].appendChild(me);
     }
     resize(){
         if(this.cards.length != 0){

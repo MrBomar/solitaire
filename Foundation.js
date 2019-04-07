@@ -9,7 +9,10 @@ class Foundation extends Pile{
         this.classList = ["pile", "foundation", "symbol", "pileClick", "clickable"];
         this.render = this.render.bind(this);
         this.suite = suite.suite;
-        this.render();
+        //this.render();
+    }
+    element(){
+        return document.getElementById(this.name);
     }
     dealMe(card, face){
         card.face = face;
@@ -24,7 +27,7 @@ class Foundation extends Pile{
         })
         me.style.color = `${this.color}`;
         me.innerText = `${this.symbol}`;
-        document.getElementsByTagName("body")[0].appendChild(me);
+        document.getElementsByTagName("main")[0].appendChild(me);
     }
     selectCards(aCard){
         return (this.cardCount() > 0)?[this.topCard()]:[];

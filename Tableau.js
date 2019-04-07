@@ -23,7 +23,7 @@ class Tableau extends Pile{
         }
     }
     nextCardPOS(){
-        let cardHeight = solitare.stock.element().offsetHeight;
+        let cardHeight = currentGame().stock.element().offsetHeight;
         let baseMargin = cardHeight / 4;
         let returnMargin = 0;
         if(this.cardCount() > 0){

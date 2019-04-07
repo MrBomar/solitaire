@@ -2,9 +2,15 @@ Simple Solitare
 
 Goal: To create a simple random solitare game using only HTML5, CSS, and VanillaJS.
 
-Purpose: To enhance my understanding of working with DOM objects.
+Purpose: To enhance my understanding of working with DOM objects and application flow.
 
 Updates:
+
+
+Update ??? @ ??? Eastern --
+    --Added a popout menu.
+    --Changed the game state to an array and updated functions to handle array of games.
+    --Changed the Foundation so that it doesn't auto render.
 
 Update 03/26/2019 @ 12:45 Eastern --
     --Corrected the control buttons sizing and spacing.

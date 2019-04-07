@@ -139,5 +139,3 @@ let storedAnimations = [];
 Array.from(document.getElementsByTagName("div")).forEach(div=>{
     storedAnimations.push(new MoveObj(div,{top:600, topUOM:"vw",left:500, leftUOM:"vh"},false,2000,90,true,2));
 })
-
-//let myself = new MoveObj(document.getElementById('coloredBox'), {top:600,left:600}, document.getElementById('largeBox2'),1000,90);
