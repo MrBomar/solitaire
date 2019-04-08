@@ -7,7 +7,8 @@ let isClickable = (obj) => {
     }
 }
 let clickEvent = (event) => {
-    console.log('Click Started');
+    console.clear();
+    console.log('clickEvent()');
     let item = isClickable(event.target);
     event.stopPropagation();
     if(item === false){
@@ -155,6 +156,9 @@ class Solitaire{
         this.dealEvent = setInterval(this.deal,150);
     }
     moveCard(thisCard, toStack, history, count){
+
+        console.log('moveCard()');
+
         //We will only handle moving a card in this function, flipping the card must be managed outside this function.
         let origStack = thisCard.currentStack(); //Identifies the card's origin
         if(history){this.moveHistory.push({action:"move",card:thisCard,to:origStack, history:false, ID:count})}; //Stores the move in the history
@@ -177,6 +181,9 @@ class Solitaire{
         toStack.cards.push(origStack.removeCard(thisCard.name));
     }
     movePriorClick(toPile){
+
+        console.log('movePriorClick()');
+
         //Will transfer the priorClick.length to the moveCar()
         //moveCard will store the priorClick.length
         //Undo will then use the priorClick.length to move the correct number of cards
@@ -197,21 +204,24 @@ class Solitaire{
         return this.moveHistory.length;
     }
     reStock(){
+
+        console.log('reStock()');
+
         this.talon.cards.reverse();
         this.talon.cards.forEach(card=>{this.priorClick.push(card)});
         this.movePriorClick(this.stock);
     }
     cardClickEvent(cardID){
+
+        console.log('cardClickEvent()');
+
         //Find the card
+        
         let clickedCard = currentGame().findCard(cardID);
-        console.log('Pulling the Card Object');
-        console.log(clickedCard.name);
 
         //Capture cards affected by this click
         let selectedStack = clickedCard.currentStack();
         let selectedCards = selectedStack.selectCards(clickedCard);
-        console.log('Array of Selected Cards');
-        console.log(selectedCards);
 
         if(selectedStack.name == "stock"){                                 //Stock card clicked 
             currentGame().priorClick = [currentGame().stock.topCard()];    //Add the top Stock Card to the priorClick
@@ -225,18 +235,19 @@ class Solitaire{
         } else {
             //Action taken if no other cards were previously selected.
             currentGame().priorClick = selectedCards;
-            console.log('The Prior Click');
-            console.log(currentGame().priorClick);
             currentGame().shade(currentGame().priorClick);
             currentGame().fireCard(clickedCard);
         }
     }
     pileClickEvent(pileID){
+
+        console.log('pileClickEvent');
+
         //Select clicked pile
         let clickedPile = currentGame()[pileID];
 
         if(currentGame().priorClick.length != 0){
-            let fromPile = currentGame().priorClick[0].currentStack();
+            //let fromPile = currentGame().priorClick[0].currentStack();    ***************Unused
             if(clickedPile.validateMove(currentGame().priorClick[0])){
                 currentGame().movePriorClick(clickedPile);
             } else {
@@ -255,12 +266,14 @@ class Solitaire{
         return newArray;
     }
     shade(cardArray){
-        console.log('Shade has been called');
         cardArray.forEach(x =>{
             x.element().classList.add("shade");
         })
     }
     clearPriorClick(){
+
+        console.log('clearPriorClick()');
+
         Array.from(document.getElementsByClassName("shade")).forEach(item=>{item.classList.remove('shade')});
         this.priorClick = [];
     }
@@ -309,6 +322,9 @@ class Solitaire{
         if(complete && !this.won){
             this.won = true;
             this.sendSolvedDeck();
+
+            console.log('Is the block button the problem?');
+
             document.getElementById("solve").style.display = "block";
         }
 
@@ -323,17 +339,14 @@ class Solitaire{
         },500)
     }
     fireCard(myCard){
-        console.log('FireCard');
-        console.log('PriorClick');
-        console.log(this.priorClick);
+
+        console.log('fireCard()');
+
         let selectPiles = (this.priorClick.length === 1)?this.foundations.concat(this.tableau):this.tableau;
         let availablePiles = selectPiles.filter(pile => pile.name != myCard.currentStack().name);
         
         availablePiles.forEach(pile=>{
             if((pile.validateMove(myCard))&&(this.priorClick.length > 0)){
-                console.log('Destination Pile');
-                console.log(pile);
-                console.log(this.priorClick);
                 this.movePriorClick(pile);
                 return;
             }
@@ -377,10 +390,13 @@ class Solitaire{
         return this.foundations.find(pile=>pile.suite == aCard.suite.suite);
     }
     sendSolvedDeck(){
-        let xhr = new XMLHttpRequest;
-        xhr.open("POST", "https://mrlesbomar.com/solitaire/cgi-bin/add_solved_deck.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-        xhr.send('input1='+this.storedStock);
+        if(this.storedStock.length > 0){
+            let xhr = new XMLHttpRequest;
+            xhr.open("POST", "https://mrlesbomar.com/solitaire/cgi-bin/add_solved_deck.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            xhr.send('input1='+this.storedStock);
+            this.storedStock = "";
+        }
     }
 }
 

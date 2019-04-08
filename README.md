@@ -11,7 +11,11 @@ Target Updates:
     --Add ability to load solvable deck.
     --Save game state on close.
 
-Update 04/07/2019 # ??? Eastern --
+Update 04/08/2019 @ 17:58 Eastern --
+    --Improved menu bar performance, added mouseleave listener.
+    --Added trouble shooting comments.
+
+Update 04/08/2019 @ 16:45 Eastern --
     --Enhanced menu bar activation/deactivation.
     --Corrected card alignment on resize and rotation.
     --Corrected error with bottom of card click detection.

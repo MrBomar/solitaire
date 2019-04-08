@@ -20,6 +20,8 @@ class MenuBar {
         this.activate = this.activate.bind(this);
         this.deActivate = this.deActivate.bind(this);
         this.element = this.element.bind(this);
+        this.deActivateTimer;
+        this.element().addEventListener("mouseenter", this.activate);
     }
     click(text){
         switch (text) {
@@ -40,6 +42,11 @@ class MenuBar {
             let moveMenu = new MoveObj(this.element(),{top:0,topUOM:"px",left:0, leftUOM:"px"},false,250,26,false,100,false);
             moveMenu.begin();
             this.open = true;
+
+            //Time the application of the mouseleave eventListener to append after animation is complete.
+            this.deActivateTimer = setTimeout(()=>{
+                this.element().addEventListener("mouseleave", this.deActivate);
+            },250)
         }   
     }
     deActivate(){
@@ -48,6 +55,7 @@ class MenuBar {
             let moveMenu = new MoveObj(this.element(),{top:hide,topUOM:"vh",left:0, leftUOM:"px"},false,250,26,false,100,false);
             moveMenu.begin();
             this.open = false
+            this.element().removeEventListener("mouseleave", this.deActivate);
         }
     }
     element(){
@@ -58,4 +66,3 @@ class MenuBar {
 let navBar = new MenuBar;
 
 navBar.element().addEventListener("click", function(event){navBar.click(event.target.innerText);});
-navBar.element().addEventListener("mouseenter", navBar.activate);
