@@ -2,10 +2,12 @@ let isClickable = (obj) => {
     if(obj.classList.length == 0){
         return (obj.parentElement === null)?false:isClickable(obj.parentElement);
     } else {
-        return (Array.from(obj.classList).includes("clickable"))?obj:false;
+        let clickAble = (Array.from(obj.classList).includes("clickable"))?obj:false
+        return (clickAble)?clickAble:isClickable(obj.parentElement);
     }
 }
 let clickEvent = (event) => {
+    console.log('Click Started');
     let item = isClickable(event.target);
     event.stopPropagation();
     if(item === false){
@@ -70,6 +72,8 @@ class Solitaire{
         this.undo = this.undo.bind(this);
         this.solve = this.solve.bind(this);
         this.won = false;
+        this.solveTimer;
+        this.fireCard = this.fireCard.bind(this);
     }
     toHex(num){
         return "0123456789ABCDEF".charAt(num)
@@ -107,6 +111,12 @@ class Solitaire{
         //Cycle through the foundations and remove the DOM elements.
         this.foundations.forEach(foundation=>{
             foundation.element().parentElement.removeChild(foundation.element());
+        })
+
+        //Cycle through main children and delete them
+        let mainDIV = document.getElementsByTagName("main")[0];
+        Array.from(mainDIV.children).forEach(child=>{
+            mainDIV.removeChild(child);
         })
     }
     newGame(){
@@ -194,24 +204,31 @@ class Solitaire{
     cardClickEvent(cardID){
         //Find the card
         let clickedCard = currentGame().findCard(cardID);
+        console.log('Pulling the Card Object');
+        console.log(clickedCard.name);
 
         //Capture cards affected by this click
         let selectedStack = clickedCard.currentStack();
         let selectedCards = selectedStack.selectCards(clickedCard);
+        console.log('Array of Selected Cards');
+        console.log(selectedCards);
 
         if(selectedStack.name == "stock"){                                 //Stock card clicked 
-            currentGame().priorClick = [currentGame().stock.topCard()];                           //Add the top Stock Card to the priorClick
-            currentGame().movePriorClick(currentGame().talon);                                    //Execute moving of all cards in PriorClick
-        } else if (currentGame().priorClick.length != 0){                       //All other Pile card clicks if Cards were previously selected
-            if(selectedStack.validateMove(currentGame().priorClick[0])){        //If selected cards can be moved to clicked Pile
-                currentGame().movePriorClick(selectedStack);                             //Execute moving of all cards in PriorClick
+            currentGame().priorClick = [currentGame().stock.topCard()];    //Add the top Stock Card to the priorClick
+            currentGame().movePriorClick(currentGame().talon);             //Execute moving of all cards in PriorClick
+        } else if (currentGame().priorClick.length != 0){                  //All other Pile card clicks if Cards were previously selected
+            if(selectedStack.validateMove(currentGame().priorClick[0])){   //If selected cards can be moved to clicked Pile
+                currentGame().movePriorClick(selectedStack);               //Execute moving of all cards in PriorClick
             } else {                                                       //If selected cards cannot be moved to the clicked pile.
-                currentGame().clearPriorClick();                                     //Clear the selected cards
+                currentGame().clearPriorClick();                           //Clear the selected cards
             }
         } else {
             //Action taken if no other cards were previously selected.
             currentGame().priorClick = selectedCards;
+            console.log('The Prior Click');
+            console.log(currentGame().priorClick);
             currentGame().shade(currentGame().priorClick);
+            currentGame().fireCard(clickedCard);
         }
     }
     pileClickEvent(pileID){
@@ -238,6 +255,7 @@ class Solitaire{
         return newArray;
     }
     shade(cardArray){
+        console.log('Shade has been called');
         cardArray.forEach(x =>{
             x.element().classList.add("shade");
         })
@@ -288,19 +306,38 @@ class Solitaire{
             })
         })
 
-        if(complete && !won){
-            won = true;
-            //this.sendSolvedDeck();
+        if(complete && !this.won){
+            this.won = true;
+            this.sendSolvedDeck();
             document.getElementById("solve").style.display = "block";
         }
 
         return complete;
     }
     solve(){
-        do {
-            this.tableauCycle();
-            this.talonCycle();
-        } while (this.cardsOnBoard());
+        this.solveTimer = setTimeout(()=>{
+            if(this.cardsOnBoard()){
+                this.tableauCycle();
+                this.talonCycle();
+            }
+        },500)
+    }
+    fireCard(myCard){
+        console.log('FireCard');
+        console.log('PriorClick');
+        console.log(this.priorClick);
+        let selectPiles = (this.priorClick.length === 1)?this.foundations.concat(this.tableau):this.tableau;
+        let availablePiles = selectPiles.filter(pile => pile.name != myCard.currentStack().name);
+        
+        availablePiles.forEach(pile=>{
+            if((pile.validateMove(myCard))&&(this.priorClick.length > 0)){
+                console.log('Destination Pile');
+                console.log(pile);
+                console.log(this.priorClick);
+                this.movePriorClick(pile);
+                return;
+            }
+        });
     }
     cardsOnBoard(){
         let result = false;
@@ -340,11 +377,10 @@ class Solitaire{
         return this.foundations.find(pile=>pile.suite == aCard.suite.suite);
     }
     sendSolvedDeck(){
-        //This function will send the shuffled deck to the server for storage
         let xhr = new XMLHttpRequest;
-        xhr.open("POST", "http://mrlesbomar.com/solitaire/cgi-bin/add_solved_deck.php", true);
+        xhr.open("POST", "https://mrlesbomar.com/solitaire/cgi-bin/add_solved_deck.php", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-        xhr.send(this.storedStock);
+        xhr.send('input1='+this.storedStock);
     }
 }
 
@@ -364,7 +400,6 @@ const saveGameState = () =>{
 
 const currentGameResize = () => {
     if(games.length>0){
-        console.log('Resize Fired');
         currentGame().resize()
     }
 }

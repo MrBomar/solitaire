@@ -6,10 +6,17 @@ Purpose: To enhance my understanding of working with DOM objects and application
 
 Updates:
 
-Update 04/07/2019 # ??? Eastern --
-    --Enhanced menu bar activation/deactivation
-    --Corrected card alignment on resize and rotation
+Target Updates:
+    --Fix auto move cycle (when tableau is empty it's still trying to process cards) +++++++ Might be cycling the talon/stock when    empty.
+    --Add ability to load solvable deck.
+    --Save game state on close.
 
+Update 04/07/2019 # ??? Eastern --
+    --Enhanced menu bar activation/deactivation.
+    --Corrected card alignment on resize and rotation.
+    --Corrected error with bottom of card click detection.
+    --Added single click move ability.
+    --Solved decks now saved to the server.
 
 Update 4/7/2019 @ 18:30 Eastern --
     --Added a popout menu.

@@ -13,13 +13,14 @@ class Tableau extends Pile{
         this.selectCards = this.selectCards.bind(this);
     }
     validateMove(aCard){
-        let valid = true;
-        if((this.cardCount() == 0) && (aCard.value == 13)) {
+        if(this.cards.length > 0){
+            if((aCard.suite.color != this.topCard().suite.color) && (aCard.value == this.topCard().value-1)){
+                return true;
+            } else {
+                return false;
+            }   
+        } else if((this.cardCount() == 0) && (aCard.value == 13)){
             return true;
-        } else if((aCard.suite.color != this.topCard().suite.color) && (aCard.value == this.topCard().value-1)){
-            return true;
-        } else {
-            return false;
         }
     }
     nextCardPOS(){

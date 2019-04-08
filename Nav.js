@@ -29,6 +29,7 @@ class MenuBar {
                 break;
             case "Undo":
                 currentGame().undo();
+                this.deActivate();
                 break;
             default:
                 break;
