@@ -1,9 +1,9 @@
 class Card {
-    constructor(suite, value){
+    constructor(suite, value, face){
         this.name = `${suite.suite}${value}`;
         this.value = value;
         this.suite = suite;
-        this.face = false;
+        this.face = face;
         this.currentStack = this.currentStack.bind(this);
         this.element = this.element.bind(this);
         this.symbol = this.symbol.bind(this);

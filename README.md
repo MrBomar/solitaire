@@ -13,9 +13,12 @@ Current Features:
 Updates:
 
 Future Planned Updates:
-    --Save game state on close.
     --Create user accounts with game play data
     --Reinstate Quick Solve feature
+    --Save user stats
+
+Update 04/09/2019 @ 16:53 Eastern
+    --Added client side save game state, will resume game when player returns.
 
 Update 04/09/2019 @ 15:00 Eastern
     --Added error message when server is unavailable.

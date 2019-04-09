@@ -9,7 +9,7 @@ class Foundation extends Pile{
         this.classList = ["pile", "foundation", "symbol", "pileClick", "clickable"];
         this.render = this.render.bind(this);
         this.suite = suite.suite;
-        //this.render();
+        this.render();
     }
     element(){
         return document.getElementById(this.name);

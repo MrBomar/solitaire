@@ -9,8 +9,19 @@ const currentGame = () => {
 const newSolitaire = (type) => {
     if(games.length>0) currentGame().clearBoard();                      //Only clear the board if a game is already created.
     games.push(new Solitaire);                                          //Create a new instance of the the solitare game.
-    (type=='random')?currentGame().newGame(currentGame().randomDeck()): //Set up the board with a random deck.
-    currentGame().getSolvedDeck();                                      //Set up the board with a solved deck.
+    switch(type){
+        case 'random':
+            currentGame().newGame(currentGame().randomDeck());
+            break;
+        case 'solvable':
+            currentGame().getSolvedDeck();
+            break;
+        case 'saved':
+            currentGame().restoreGameState();
+            break;
+    }
+    // (type=='random')?currentGame().newGame(currentGame().randomDeck()): //Set up the board with a random deck.
+    // currentGame().getSolvedDeck();                                      //Set up the board with a solved deck.
 }
 
 class MenuBar {

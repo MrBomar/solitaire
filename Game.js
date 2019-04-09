@@ -127,13 +127,12 @@ class Solitaire{
     }
     solvableDeck(){
         let returnDeck = this.getSolvedDeck();
-        console.log(returnDeck);
     }
     randomDeck(){
         let tempDeck = [];
         this.suites.forEach(suite => {
             [1,2,3,4,5,6,7,8,9,10,11,12,13].forEach(number => {
-                tempDeck.push(new Card(suite, number));
+                tempDeck.push(new Card(suite, number, false));
             })
         })
 
@@ -141,11 +140,6 @@ class Solitaire{
         return this.randomizeArray(tempDeck)
     }
     newGame(myDeck){
-        //Render Foundations
-        this.foundations.forEach(foundation=>{
-            foundation.render();
-        })
-
         //Add selected deck to the stock
         myDeck.forEach(item => {
             this.stock.addCard(item);
@@ -414,10 +408,10 @@ class Solitaire{
             } while (solvedDeckString.length > 0);
             let finishedDeck = solvedDeckPairs.map(pair=>{
                 switch(pair[0]){
-                    case 's': return new Card(this.suites.find(x=> x.suite == 'spade'),this.toDec(pair[1]));
-                    case 'd': return new Card(this.suites.find(x=> x.suite == 'diamond'),this.toDec(pair[1]));
-                    case 'c': return new Card(this.suites.find(x=> x.suite == 'club'),this.toDec(pair[1]));
-                    case 'h': return new Card(this.suites.find(x=> x.suite == 'heart'),this.toDec(pair[1]));
+                    case 's': return new Card(this.suites.find(x=> x.suite == 'spade'),this.toDec(pair[1]),false);
+                    case 'd': return new Card(this.suites.find(x=> x.suite == 'diamond'),this.toDec(pair[1]),false);
+                    case 'c': return new Card(this.suites.find(x=> x.suite == 'club'),this.toDec(pair[1]),false);
+                    case 'h': return new Card(this.suites.find(x=> x.suite == 'heart'),this.toDec(pair[1]),false);
                 }
             })
             this.newGame(finishedDeck);
@@ -464,20 +458,31 @@ class Solitaire{
             winning.style.opacity = 1;
         },500);
     }
-}
-
-const saveGameState = () =>{
-    //Experiment with storing game state
-    let gameState = [];
-    currentGame().allStacks.forEach(pile=>{gameState.push({pile:pile.name,cards:[]})});
-    gameState.forEach(pile=>{
-        currentGame()[pile.pile].cards.forEach(card=>{
-            pile.cards.push({name:card.name,value:card.value,suite:card.suite,face:card.face});
-        });
-    })
-    let newString = JSON.stringify(gameState);
-    console.log(newString);
-    console.log(newString.length)
+    restoreGameState(){
+        let gameState = JSON.parse(localStorage.getItem("gameState"));
+        gameState.forEach(pile=>{
+            if(pile.cards.length > 0){
+                pile.cards.forEach(card => {
+                    let newCard = new Card(card.suite,card.value,(card.face === "true")?true:false);
+                    this[pile.pile].addCard(newCard);
+                })
+            }
+        })
+        this.storedStock = localStorage.getItem('storedStock');
+    }
+    saveGameState(){
+        //Saves the game state so user won't loose game progess.
+        let gameState = this.allStacks.map(pile=> {return {pile:pile.name, cards:[]}})
+        gameState.forEach(pile=>{
+            pile.cards = this.stringifyCards(this[pile.pile].cards);
+        })
+        localStorage.clear();
+        localStorage.setItem("gameState", JSON.stringify(gameState));
+        localStorage.setItem("storedStock", this.storedStock);
+    }
+    stringifyCards(cardArray){
+        return cardArray.map(card=>{return {name:card.name,value:card.value,suite:card.suite,face:String(card.face)}});
+    }
 }
 
 const currentGameResize = () => {
@@ -489,3 +494,6 @@ const currentGameResize = () => {
 document.getElementsByTagName("main")[0].addEventListener("click", clickEvent);
 window.addEventListener("resize", currentGameResize);
 window.addEventListener("orientationchange", currentGameResize);
+window.onbeforeunload = () => {currentGame().saveGameState()};
+
+if(localStorage.getItem('gameState') != null)newSolitaire('saved');
