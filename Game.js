@@ -74,6 +74,8 @@ class Solitaire{
         this.solveTimer;
         this.fireCard = this.fireCard.bind(this);
         this.randomDeck = this.randomDeck.bind(this);
+        this.celebrationTimer;
+        this.celebrationCards = [];
     }
     toHex(num){
         return "0123456789ABCDEF".charAt(num)
@@ -111,10 +113,11 @@ class Solitaire{
             }
         })
 
+        try {
         //Cycle through the foundations and remove the DOM elements.
         this.foundations.forEach(foundation=>{
             foundation.element().parentElement.removeChild(foundation.element());
-        })
+        }) } catch{}
 
         //Cycle through main children and delete them
         let mainDIV = document.getElementsByTagName("main")[0];
@@ -343,11 +346,11 @@ class Solitaire{
         });
     }
     cardsOnBoard(){
-        let result = false;
-        let myPiles = Array.from(this.tableau);
-        myPiles.push(this.stock,this.talon);
-        myPiles.forEach(pile=>{if(pile.cards.length > 0){result = true}});
-        return result;
+        //Return true if card remains in stock, talon, or any tableau.
+        let remainingPiles = this.tableau.concat(this.stock).concat(this.talon).filter(pile=>{
+            return pile.cards.length > 0;
+        });
+        return (remainingPiles.length > 0)?true:false;
     }
     tableauCycle(){
         let tabs = this.tableau.filter((tab)=>{return tab.cards.length > 0 });
@@ -389,7 +392,8 @@ class Solitaire{
             this.storedStock = "";
         }
     }
-    getSolvedDeck(theGame){
+    getSolvedDeck(){
+        let failed = false;
         new Promise((resolve, reject)=>{
             let xhr = new XMLHttpRequest;
             xhr.open('GET', "https://mrlesbomar.com/solitaire/cgi-bin/get_solved_deck.php");
@@ -416,13 +420,18 @@ class Solitaire{
                     case 'h': return new Card(this.suites.find(x=> x.suite == 'heart'),this.toDec(pair[1]));
                 }
             })
-            theGame(finishedDeck);
+            this.newGame(finishedDeck);
+        }).catch(error=>{
+            //Create status screen and deal random deck
+            let notice = document.createElement('div');
+            notice.id = 'notice';
+            notice.innerHTML = `<h1>Unable to connect to the server. Please choose a random deck.</h1>`;
+            document.getElementsByTagName('main')[0].appendChild(notice);
         });
     }
     celebration(){
-        console.log('Celebration Fired!');
-        let width = document.width;
-        let height = document.height;
+        let width = window.innerWidth;
+        let height = window.innerHeight;
         const randomNumber = (num) => Math.floor(Math.random()*num);
         this.foundations.forEach(foundation=>{
             foundation.cards.forEach(card=>{
@@ -430,15 +439,30 @@ class Solitaire{
                     card.element(),
                     {top:randomNumber(height),left:randomNumber(width)},
                     false,
-                    250,
+                    500,
                     26,
                     false,
                     1,
                     []
                 )
-                me.begin();
+                this.celebrationCards.push(me);
             })
         })
+        this.celebrationTimer = setInterval(()=>{
+            if(this.celebrationCards.length > 0){
+                this.celebrationCards.shift().begin();
+            } else {
+                clearInterval(this.celebrationTimer);
+            }
+        },50)
+        setTimeout(()=>{
+            let winning = document.createElement('div');
+            winning.id = "winner";
+            winning.innerHTML = "<h1>WINNER!!</h1>";
+            document.getElementsByTagName('main')[0].appendChild(winning);
+            navBar.activate();
+            winning.style.opacity = 1;
+        },500);
     }
 }
 

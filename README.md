@@ -4,12 +4,25 @@ Goal: To create a simple random solitare game using only HTML5, CSS, and Vanilla
 
 Purpose: To enhance my understanding of working with DOM objects and application flow.
 
+Current Features:
+    ** Choice of random or solvable decks
+    ** Solvable decks added to server as users win games
+    ** Single click card moves
+    ** Undo feature gives players unlimited undos
+
 Updates:
 
-Target Updates:
-    --Fix auto move cycle (when tableau is empty it's still trying to process cards) +++++++ Might be cycling the talon/stock when    empty.
-    --Add ability to load solvable deck.
+Future Planned Updates:
     --Save game state on close.
+    --Create user accounts with game play data
+    --Reinstate Quick Solve feature
+
+Update 04/09/2019 @ 15:00 Eastern
+    --Added error message when server is unavailable.
+
+Update 04/09/2019 @ 12:43 Eastern
+    --Animated celebration routine added when user wins
+    --Added function to continue with random deck if user cannot connect to the server.
 
 Update 04/08/2019 @ 22:17 Eastern--
     --Improved navBar style.
@@ -22,6 +35,7 @@ Update 04/08/2019 @ 20:15 Eastern--
 Update 04/08/2019 @ 18:17 Eastern--
     --Corrected display problem with Quick Solve button
     --Removed trouble shooting comments.
+    --Fixed auto move cycle issue.
 
 Update 04/08/2019 @ 17:58 Eastern --
     --Improved menu bar performance, added mouseleave listener.

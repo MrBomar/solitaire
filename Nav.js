@@ -1,4 +1,3 @@
-//I might change this to a React.js at a later date
 //This Nav bar is going to permit the playing of different games in the future.
 
 let games = [];
@@ -8,10 +7,10 @@ const currentGame = () => {
 }
 
 const newSolitaire = (type) => {
-    if(games.length>0) currentGame().clearBoard(); //Only clear the board if a game is already created.
-    games.push(new Solitaire); //Create a new instance of the the solitare game.
+    if(games.length>0) currentGame().clearBoard();                      //Only clear the board if a game is already created.
+    games.push(new Solitaire);                                          //Create a new instance of the the solitare game.
     (type=='random')?currentGame().newGame(currentGame().randomDeck()): //Set up the board with a random deck.
-    currentGame().getSolvedDeck(currentGame().newGame);                 //Set up the board with a solved deck.
+    currentGame().getSolvedDeck();                                      //Set up the board with a solved deck.
 }
 
 class MenuBar {
@@ -49,7 +48,7 @@ class MenuBar {
             //Time the application of the mouseleave eventListener to append after animation is complete.
             this.deActivateTimer = setTimeout(()=>{
                 this.element().addEventListener("mouseleave", this.deActivate);
-            },250)
+            },300)
         }   
     }
     deActivate(){
