@@ -33,7 +33,7 @@ nav{
     height: 15vh;
     width: 100vw;
     display: grid;
-    grid-template-columns: 25vw 25vw 25vw 25vw;
+    grid-template-columns: 20vw 20vw 20vw 20vw 20vw;
     background-color: rgba(0,0,0,.85);
     z-index: 100;
 }

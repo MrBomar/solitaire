@@ -7,10 +7,11 @@ const currentGame = () => {
     return games[games.length-1];
 }
 
-const newSolitaire = () => {
+const newSolitaire = (type) => {
     if(games.length>0) currentGame().clearBoard(); //Only clear the board if a game is already created.
     games.push(new Solitaire); //Create a new instance of the the solitare game.
-    currentGame().newGame(); //Set up the board and deal the cards.
+    (type=='random')?currentGame().newGame(currentGame().randomDeck()): //Set up the board with a random deck.
+    currentGame().getSolvedDeck(currentGame().newGame);                 //Set up the board with a solved deck.
 }
 
 class MenuBar {
@@ -25,10 +26,13 @@ class MenuBar {
     }
     click(text){
         switch (text) {
-            case "New Game":
-                newSolitaire();
+            case "Solvable Game":
+                newSolitaire('solvable');
                 this.deActivate();
                 break;
+            case "Random Game":
+                newSolitaire('random');
+                this.deActivate();
             case "Undo":
                 currentGame().undo();
                 this.deActivate();

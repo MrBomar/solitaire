@@ -73,9 +73,13 @@ class Solitaire{
         this.won = false;
         this.solveTimer;
         this.fireCard = this.fireCard.bind(this);
+        this.randomDeck = this.randomDeck.bind(this);
     }
     toHex(num){
         return "0123456789ABCDEF".charAt(num)
+    }
+    toDec(alph){
+        return "0123456789ABCDEF".indexOf(alph);
     }
     storeStock(){
         currentGame().stock.cards.forEach(card=>{
@@ -118,13 +122,11 @@ class Solitaire{
             mainDIV.removeChild(child);
         })
     }
-    newGame(){
-        //Render Foundations
-        this.foundations.forEach(foundation=>{
-            foundation.render();
-        })
-
-        //Now that the table has been cleared, we can build the deck.
+    solvableDeck(){
+        let returnDeck = this.getSolvedDeck();
+        console.log(returnDeck);
+    }
+    randomDeck(){
         let tempDeck = [];
         this.suites.forEach(suite => {
             [1,2,3,4,5,6,7,8,9,10,11,12,13].forEach(number => {
@@ -132,8 +134,17 @@ class Solitaire{
             })
         })
 
-        //Shuffle deck and add to stock
-        this.randomizeArray(tempDeck).forEach(item => {
+        //Shuffle deck and add return
+        return this.randomizeArray(tempDeck)
+    }
+    newGame(myDeck){
+        //Render Foundations
+        this.foundations.forEach(foundation=>{
+            foundation.render();
+        })
+
+        //Add selected deck to the stock
+        myDeck.forEach(item => {
             this.stock.addCard(item);
         })
 
@@ -369,6 +380,7 @@ class Solitaire{
         return this.foundations.find(pile=>pile.suite == aCard.suite.suite);
     }
     sendSolvedDeck(){
+        //This function will send the solved deck to the server.
         if(this.storedStock.length > 0){
             let xhr = new XMLHttpRequest;
             xhr.open("POST", "https://mrlesbomar.com/solitaire/cgi-bin/add_solved_deck.php", true);
@@ -376,6 +388,36 @@ class Solitaire{
             xhr.send('input1='+this.storedStock);
             this.storedStock = "";
         }
+    }
+    getSolvedDeck(theGame){
+        new Promise((resolve, reject)=>{
+            let xhr = new XMLHttpRequest;
+            xhr.open('GET', "https://mrlesbomar.com/solitaire/cgi-bin/get_solved_deck.php");
+            xhr.onload = () =>{
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(xhr.response);
+                } else {
+                    reject(xhr.statusText);
+                }
+            }
+            xhr.onerror = () => reject(xhr.statusText);
+            xhr.send();
+        }).then(stuff=>{
+            let solvedDeckString = String(stuff).split("");
+            let solvedDeckPairs = [];
+            do {
+                solvedDeckPairs.push([solvedDeckString.shift(), solvedDeckString.shift()]);
+            } while (solvedDeckString.length > 0);
+            let finishedDeck = solvedDeckPairs.map(pair=>{
+                switch(pair[0]){
+                    case 's': return new Card(this.suites.find(x=> x.suite == 'spade'),this.toDec(pair[1]));
+                    case 'd': return new Card(this.suites.find(x=> x.suite == 'diamond'),this.toDec(pair[1]));
+                    case 'c': return new Card(this.suites.find(x=> x.suite == 'club'),this.toDec(pair[1]));
+                    case 'h': return new Card(this.suites.find(x=> x.suite == 'heart'),this.toDec(pair[1]));
+                }
+            })
+            theGame(finishedDeck);
+        });
     }
 }
 
