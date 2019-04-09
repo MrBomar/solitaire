@@ -27,24 +27,28 @@ body {
      text-align: center;
 }
 
-nav{
-    top: 0px;
-    left: 0px;
+nav {
     height: 15vh;
     width: 100vw;
+    bottom: 0px;
+    background-color: rgba(0,0,0,.70);
     display: grid;
-    grid-template-columns: 20vw 20vw 20vw 20vw 20vw;
-    background-color: rgba(0,0,0,.85);
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    transition: 0.3s;
     z-index: 100;
 }
 
-nav h1{
-    display: inline;
-    position: relative;
-    text-align: center;
+nav * {
+    position: static;
+    font-size: 1.5em;
     color: white;
-    line-height: 15vh;
     user-select: none;
+}
+
+.shitSucks{
+    display:flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .symbol {

@@ -419,6 +419,27 @@ class Solitaire{
             theGame(finishedDeck);
         });
     }
+    celebration(){
+        console.log('Celebration Fired!');
+        let width = document.width;
+        let height = document.height;
+        const randomNumber = (num) => Math.floor(Math.random()*num);
+        this.foundations.forEach(foundation=>{
+            foundation.cards.forEach(card=>{
+                let me = new MoveObj(
+                    card.element(),
+                    {top:randomNumber(height),left:randomNumber(width)},
+                    false,
+                    250,
+                    26,
+                    false,
+                    1,
+                    []
+                )
+                me.begin();
+            })
+        })
+    }
 }
 
 const saveGameState = () =>{

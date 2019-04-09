@@ -43,8 +43,7 @@ class MenuBar {
     }
     activate(){
         if(!this.open){
-            let moveMenu = new MoveObj(this.element(),{top:0,topUOM:"px",left:0, leftUOM:"px"},false,250,26,false,100,false);
-            moveMenu.begin();
+            this.element().style.height = "15vh";
             this.open = true;
 
             //Time the application of the mouseleave eventListener to append after animation is complete.
@@ -55,9 +54,7 @@ class MenuBar {
     }
     deActivate(){
         if(this.open){
-            let hide = ((window.innerHeight / 100) * 14) * -1;
-            let moveMenu = new MoveObj(this.element(),{top:hide,topUOM:"vh",left:0, leftUOM:"px"},false,250,26,false,100,false);
-            moveMenu.begin();
+            this.element().style.height = "0px";
             this.open = false
             this.element().removeEventListener("mouseleave", this.deActivate);
         }
@@ -67,6 +64,14 @@ class MenuBar {
     }
 }
 
+const possibleActivate = () => {
+    let curPos = window.event.pageY;
+    let windowH = window.innerHeight;
+    let mar = windowH * .98;
+    if(curPos > mar)navBar.activate();
+}
+
 let navBar = new MenuBar;
 
+document.getElementsByTagName('main')[0].addEventListener('mousemove', possibleActivate);
 navBar.element().addEventListener("click", function(event){navBar.click(event.target.innerText);});

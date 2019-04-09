@@ -11,6 +11,14 @@ Target Updates:
     --Add ability to load solvable deck.
     --Save game state on close.
 
+Update 04/08/2019 @ 22:17 Eastern--
+    --Improved navBar style.
+    --Moved navBar to bottom of page.
+
+Update 04/08/2019 @ 20:15 Eastern--
+    --Added the ability to play with a solved/solvable deck.
+    --Used a Promise and XMLHttpRequest for pulling solved decks from server.
+
 Update 04/08/2019 @ 18:17 Eastern--
     --Corrected display problem with Quick Solve button
     --Removed trouble shooting comments.
