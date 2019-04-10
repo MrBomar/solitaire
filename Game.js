@@ -14,7 +14,7 @@ let clickEvent = (event) => {
         return;
     }
     let clickClasses = [
-        {text:"solveClick",exec:currentGame().solve},
+        {text:"solveClick",exec:currentGame().quickSolve},
         {text:"cardClick",exec:currentGame().cardClickEvent},
         {text:"pileClick",exec:currentGame().pileClickEvent}
     ];
@@ -69,13 +69,13 @@ class Solitaire{
         this.storeStock = this.storeStock.bind(this);
         this.sendSolvedDeck = this.sendSolvedDeck.bind(this);
         this.undo = this.undo.bind(this);
-        this.solve = this.solve.bind(this);
         this.won = false;
         this.solveTimer;
         this.fireCard = this.fireCard.bind(this);
         this.randomDeck = this.randomDeck.bind(this);
         this.celebrationTimer;
         this.celebrationCards = [];
+        this.quickSolve = this.quickSolve.bind(this);
     }
     toHex(num){
         return "0123456789ABCDEF".charAt(num)
@@ -195,10 +195,13 @@ class Solitaire{
             this.moveCard(myCard,toPile,true,currentID);
             if((fromPile instanceof Talon)&&(toPile instanceof Stock)){myCard.flip(true,currentID)}
         } while (this.priorClick.length > 0)
-        currentGame().clearPriorClick();                                //Clear the selected cards
-        if (fromPile instanceof Tableau){fromPile.topCardFlip(currentID)}   //If from Pile is Tableau then flip top Card
-        if (toPile instanceof Talon){toPile.topCardFlip(currentID)}       //If to Pile is Talon then flip Talon top Card
+        currentGame().clearPriorClick();                                   //Clear the selected cards
+        if (fromPile instanceof Tableau){fromPile.topCardFlip(currentID)}  //If from Pile is Tableau then flip top Card
+        if (toPile instanceof Talon){toPile.topCardFlip(currentID)}        //If to Pile is Talon then flip Talon top Card
         this.done(); //Runs code to check for a win.
+        if(!this.cardsOnBoard){ //If there are no cards on the board, then we celebrate
+            this.celebration();
+        }
     }
     cardMoveID(){
         return this.moveHistory.length;
@@ -210,7 +213,6 @@ class Solitaire{
     }
     cardClickEvent(cardID){
         //Find the card
-        
         let clickedCard = currentGame().findCard(cardID);
 
         //Capture cards affected by this click
@@ -220,9 +222,11 @@ class Solitaire{
         if(selectedStack.name == "stock"){                                 //Stock card clicked 
             currentGame().priorClick = [currentGame().stock.topCard()];    //Add the top Stock Card to the priorClick
             currentGame().movePriorClick(currentGame().talon);             //Execute moving of all cards in PriorClick
+            return true;
         } else if (currentGame().priorClick.length != 0){                  //All other Pile card clicks if Cards were previously selected
             if(selectedStack.validateMove(currentGame().priorClick[0])){   //If selected cards can be moved to clicked Pile
                 currentGame().movePriorClick(selectedStack);               //Execute moving of all cards in PriorClick
+                return true;
             } else {                                                       //If selected cards cannot be moved to the clicked pile.
                 currentGame().clearPriorClick();                           //Clear the selected cards
             }
@@ -230,7 +234,7 @@ class Solitaire{
             //Action taken if no other cards were previously selected.
             currentGame().priorClick = selectedCards;
             currentGame().shade(currentGame().priorClick);
-            currentGame().fireCard(clickedCard);
+            return currentGame().fireCard(clickedCard);
         }
     }
     pileClickEvent(pileID){
@@ -314,30 +318,24 @@ class Solitaire{
             //Render a solve button
             let solveButton = document.createElement('div');
             solveButton.id = "control";
-            solveButton.innerHTML = `<h2 id="solve" class="solveClick clickable">Quick Solve</h2>`;
+            solveButton.innerHTML = `<h3 type="button" id="solve" class="solveClick clickable">Quick Solve</h3>`;
             document.getElementsByTagName('main')[0].appendChild(solveButton);
         }
 
         return complete;
     }
-    solve(){
-        this.solveTimer = setTimeout(()=>{
-            if(this.cardsOnBoard()){
-                this.tableauCycle();
-                this.talonCycle();
+    quickSolve(){
+        new Promise((resolve,reject)=>{
+            if(true){
+                resolve('Good Stuff');
             }
-        },500)
-    }
-    fireCard(myCard){
-        let selectPiles = (this.priorClick.length === 1)?this.foundations.concat(this.tableau):this.tableau;
-        let availablePiles = selectPiles.filter(pile => pile.name != myCard.currentStack().name);
-        
-        availablePiles.forEach(pile=>{
-            if((pile.validateMove(myCard))&&(this.priorClick.length > 0)){
-                this.movePriorClick(pile);
-                return;
-            }
-        });
+        }).then(
+            this.tableauCycle()
+        ).then(
+            this.talonCycle()
+        ).then(
+            this.celebration()
+        )
     }
     cardsOnBoard(){
         //Return true if card remains in stock, talon, or any tableau.
@@ -346,32 +344,52 @@ class Solitaire{
         });
         return (remainingPiles.length > 0)?true:false;
     }
-    tableauCycle(){
-        let tabs = this.tableau.filter((tab)=>{return tab.cards.length > 0 });
-        let found = false;
-        tabs.forEach(tab=>{
-            let myFoundation = this.foundationMatch(tab.topCard());
-            if(myFoundation.validateMove(tab.topCard())){
-                found = true;
-                this.cardClickEvent(tab.topCard(),true);
-                this.pileClickEvent(myFoundation,true);
+    fireCard(myCard){
+        let selectPiles = (this.priorClick.length === 1)?this.foundations.concat(this.tableau):this.tableau;
+        let availablePiles = selectPiles.filter(pile => pile.name != myCard.currentStack().name);
+        availablePiles.forEach(pile=>{
+            if((pile.validateMove(myCard))&&(this.priorClick.length > 0)){
+                this.movePriorClick(pile);
+                return true;
             }
-        })
-        if(found){this.tableauCycle()};
+        });
+    }
+    tableauCycle(){
+        //Currently Unused - part of quickSolve()
+        this.solveTimer = setInterval(()=>{
+            let found = false;
+            let tableauWithCards = this.tableau.filter(tab=>tab.cards.length > 0);
+            if(tableauWithCards.length > 0){
+                tableauWithCards.forEach(tableau=>{
+                    let topCard = tableau.topCard();
+                    if(this.foundationMatch(topCard).validateMove(topCard)){
+                        topCard.element().click();
+                        found = true;
+                    }
+                })
+            }
+            //if(found)this.tableauCycle();
+            if(!found)clearInterval(this.solveTimer);
+        },250)
     }
     talonCycle(){
-        if((this.talon.cards.length == 0) && (this.stock.cards.length == 0)){
-            return;
-        } else if (this.talon.cards.length == 0){
-            this.cardClickEvent(this.stock.topCard(),true);
-        }
-        let myFoundation = this.foundationMatch(this.talon.topCard());
-        if(myFoundation.validateMove(this.talon.topCard())){
-            this.cardClickEvent(this.talon.topCard(),true);
-            (myFoundation.cards.length == 0)?this.pileClickEvent(myFoundation,true):this.cardClickEvent(myFoundation.topCard(),true);
-        } else {
-            (this.stock.cards.length == 0)?this.pileClickEvent(this.stock,true):this.cardClickEvent(this.stock.topCard(),true);
-        }
+        //Currently Unused - part of quickSolve()
+        this.solveTimer = setInterval(()=>{
+            if(this.talon.cards.length > 0){
+                if(this.foundationMatch(this.talon.topCard()).validateMove(this.talon.topCard())){
+                    //Click card & exit
+                    this.talon.topCard().element().click();
+                } else {
+                    //Click Stock Pile
+                    (this.stock.cards.length > 0)?this.stock.topCard().element().click():this.stock.element().click;
+                }
+            } else if(this.stock.cards.length > 0){
+                //Click Stock Pile
+                this.stock.topCard().element().click();
+            } else {
+                //Exit
+            }
+        },250)
     }
     foundationMatch(aCard){
         return this.foundations.find(pile=>pile.suite == aCard.suite.suite);

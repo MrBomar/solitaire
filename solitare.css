@@ -12,8 +12,22 @@ body {
 .tableau {
     z-index: -1;
 }
+#control {
+    background-color: orangered;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top:1vw;
+    border-style: ridge;
+}
+
 #solve {
-    display: none;
+    color: black;
+    font-size: 4vh;
+    word-wrap: break-word;
+    white-space: normal;
+    width: inherit;
+    text-align: center;
 }
 
 @keyframes fade-in{
