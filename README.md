@@ -4,12 +4,12 @@ Goal: To create a simple random solitare game using only HTML5, CSS, and Vanilla
 
 Purpose: To enhance my understanding of working with DOM objects and application flow.
 
-Current Features:
-    ** Choice of random or solvable decks.
-    ** Solved decks stored on server as users win games.
-    ** Single click card moves.
-    ** Undo feature gives players unlimited undos.
-    ** Auto solve feature when user solves the deck.
+Current Features:<br/>
+    ** Choice of random or solvable decks.<br/>
+    ** Solved decks stored on server as users win games.<br/>
+    ** Single click card moves.<br/>
+    ** Undo feature gives players unlimited undos.<br/>
+    ** Auto solve feature when user solves the deck.<br/>
     ** Celebration animation when board is cleared.
 
 Updates:
