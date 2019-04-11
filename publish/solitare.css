@@ -5,10 +5,11 @@
     padding: 0px 0px 0px 0px;
     box-sizing: border-box;
     position: fixed;
-    text-size-adjust: none;
 }
 body {
     background-color: green;
+    text-size-adjust: none;
+    -webkit-text-size-adjust: none;
 }
 .tableau {
     z-index: -1;
@@ -118,6 +119,7 @@ nav * {
     border-radius: 1vw;
     background-color: rgba(255,255,255,.25);
     z-index: -1;
+    /* font-family: 'Noto Sans', sans-serif; */
 }
 .cardFront{
     background-color: white;
@@ -125,16 +127,19 @@ nav * {
     box-shadow: 1px 2px black;
     border-radius: 1vw;
 }
-.cardFront h1{
+.middleSymbol{
     text-align: center;
-    /* line-height: 20.4397vw; */
+    line-height: 20.4397vw;
     font-size: 14vw;
     width: 13.14vw;
+    text-size-adjust: none;
+    /* font-family: 'Noto Sans', sans-serif; */
 }
 .cardFront h2{
     font-size: 4vw;
     width: 13.14vw;
     display: block;
+    /* font-family: 'Noto Sans', sans-serif; */
 }
 .cardBack{
     background-color: teal;

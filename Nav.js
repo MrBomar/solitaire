@@ -20,8 +20,6 @@ const newSolitaire = (type) => {
             currentGame().restoreGameState();
             break;
     }
-    // (type=='random')?currentGame().newGame(currentGame().randomDeck()): //Set up the board with a random deck.
-    // currentGame().getSolvedDeck();                                      //Set up the board with a solved deck.
 }
 
 class MenuBar {

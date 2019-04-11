@@ -6,6 +6,7 @@ let isClickable = (obj) => {
         return (clickAble)?clickAble:isClickable(obj.parentElement);
     }
 }
+
 let clickEvent = (event) => {
     let item = isClickable(event.target);
     event.stopPropagation();
@@ -508,6 +509,21 @@ const currentGameResize = () => {
         currentGame().resize()
     }
 }
+
+const mobileFontSizeAdjustment = () => {
+    ["Mobile","Phone","Pixel","Android","Opera Mini"].forEach(device=>{
+        if(navigator.userAgent.includes(device)){
+            Array.from(document.getElementsByClassName('middleSymbol')),concat(
+                Array.from(document.getElementsByClassName('foundation'))
+            ).forEach(symb=>{
+                symb.style.fontSize = (window.innerWidth > window.innerHeight)?"3.8vh":"3.8vw";
+            })
+        };
+    })
+}
+
+window.onload = mobileFontSizeAdjustment;
+window.onorientationchange = mobileFontSizeAdjustment;
 
 document.getElementsByTagName("main")[0].addEventListener("click", clickEvent);
 window.addEventListener("resize", currentGameResize);
