@@ -63,27 +63,37 @@ Update 04/08/2019 @ 18:17 Eastern--
     --Fixed auto move cycle issue.
 
 Update 04/08/2019 @ 17:58 Eastern --
-    --Improved menu bar performance, added mouseleave listener.
-    --Added trouble shooting comments.
+
+    -Improved menu bar performance, added mouseleave listener.
+    -Added trouble shooting comments.
 
 Update 04/08/2019 @ 16:45 Eastern --
-    --Enhanced menu bar activation/deactivation.
-    --Corrected card alignment on resize and rotation.
-    --Corrected error with bottom of card click detection.
-    --Added single click move ability.
-    --Solved decks now saved to the server.
+
+    -Enhanced menu bar activation/deactivation.
+
+    -Corrected card alignment on resize and rotation.
+
+    -Corrected error with bottom of card click detection.
+
+    -Added single click move ability.
+
+    -Solved decks now saved to the server.
 
 Update 4/7/2019 @ 18:30 Eastern --
+
     - Added a popout menu.
+
     - Changed the game state to an array and updated functions to handle array of games.
+
     - Changed the Foundation so that it doesn't auto render.
 
 Update 03/26/2019 @ 12:45 Eastern --
-    - Corrected the control buttons sizing and spacing.
 
+    - Corrected the control buttons sizing and spacing.
     - Corrected the resize function.
 
 Update 03/22/2019 @ 19:03 Eastern -
+
     - Found a problem with attaching click events to moved DIV elements. Revised the click event and attached
       it to the entire document.
 
@@ -102,6 +112,7 @@ Update 03/14/2019 @ 05:29 Eastern --
     -After clicking the stock, regardless of the delay the talon click is handled as a double click.
 
 Update 03/14/2019 @ 02.04 Eastern --
+
     - Added auto solve feature
 
 Update 03/13/2019 @ 20:07 Eastern --
