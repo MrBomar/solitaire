@@ -401,19 +401,6 @@ class Solitaire{
             xhr.onerror = () => reject(xhr.statusText);
             xhr.send();
         }).then(stuff=>{
-            // let solvedDeckString = String(stuff).split("");
-            // let solvedDeckPairs = [];
-            // do {
-            //     solvedDeckPairs.push([solvedDeckString.shift(), solvedDeckString.shift()]);
-            // } while (solvedDeckString.length > 0);
-            // let finishedDeck = solvedDeckPairs.map(pair=>{
-            //     switch(pair[0]){
-            //         case 's': return new Card(this.suites.find(x=> x.suite == 'spade'),this.toDec(pair[1]),false, this.mobileUser);
-            //         case 'd': return new Card(this.suites.find(x=> x.suite == 'diamond'),this.toDec(pair[1]),false, this.mobileUser);
-            //         case 'c': return new Card(this.suites.find(x=> x.suite == 'club'),this.toDec(pair[1]),false, this.mobileUser);
-            //         case 'h': return new Card(this.suites.find(x=> x.suite == 'heart'),this.toDec(pair[1]),false, this.mobileUser);
-            //     }
-            // })
             this.newGame(this.reconstituteDeck(stuff));
         }).catch(error=>{
             //Create status screen and deal random deck

@@ -35,11 +35,6 @@ body {
 }
 
 /*Portrait View*/
-
-.mobileH1 {
-    font-size: 3.8vw;
-}
-
 #winner {
     width: 100vw;
     height: 100vh;
@@ -79,13 +74,11 @@ body {
 #notice * {
     position: static;
 }
-#control h2 {
-     width: 100%;
-     height: 100%;
-     display: block;
-     position: static;
-     line-height: 200%;
-     text-align: center;
+#control h3 {
+    font-size: 4vw;
+    display: block;
+    position: static;
+    text-align: center;
 }
 nav {
     height: 15vh;
@@ -111,18 +104,27 @@ nav * {
     margin-left: 5%;
     margin-right: 5%;
 }
-.symbol {
+.symbol{
     font-size:14vw;
     text-align: center;
     width: 13.14vw;
     z-index: -1;
 }
+.mobileSymbol{
+    padding-top:5vw;
+    font-size:8vw;
+    text-align: center;
+    width: 13.14vw;
+    z-index: -1;
+}
+
 .foundation {
     border: 1px inset;
     border-radius: 1vw;
     background-color: rgba(255,255,255,.25);
     z-index: -1;
 }
+
 .cardFront{
     background-color: white;
     border: 1px solid black;
@@ -131,7 +133,6 @@ nav * {
 }
 .cardFront h1{
     text-align: center;
-    /* line-height: 20.4397vw; */
     font-size: 14vw;
     width: 13.14vw;
 }
@@ -140,6 +141,29 @@ nav * {
     width: 13.14vw;
     display: block;
 }
+
+.mobileCardFront{
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 1px 2px black;
+    border-radius: 1vw;
+}
+.mobileCardFront h1{
+    line-height: 20.4397vw;
+    text-align: center;
+    font-size: 8vw;
+    width: 13.14vw;
+}
+.mobileCardFront h2{
+    font-size: 4vw;
+    width: 13.14vw;
+    display: block;
+}
+.mobile {
+    line-height: 20.4397vw;
+    font-size: 6vw;
+}
+
 .cardBack{
     background-color: teal;
     border-width: 1vh;
@@ -161,7 +185,7 @@ nav * {
 .bottom {
     margin-top: 15vw;
 }
-.pile, .stock, .foundation, .cardBack, .cardFront, #control {
+.pile, .stock, .foundation, .cardBack, .cardFront, #control, .mobileCardFront {
     height: 20.4397vw;
     width: 13.14vw;
     user-select: none;
@@ -187,8 +211,8 @@ nav * {
 
 @media screen and (min-aspect-ratio: 741 / 741) {
     /* Transition*/
-    .mobileH1 {
-        font-size: 3.8vh;
+    #control h3 {
+        font-size: 4vh;
     }
     #winner h1 {
         font-size: 10vw;
@@ -202,7 +226,14 @@ nav * {
         margin-top: 1vh;
         padding-top: 1vh;
     }
-    .stock, .cardBack, .cardFront, .pile, .foundation, #control{
+    .mobileSymbol {
+        padding-top: 5vh;
+        font-size: 8vh;
+        width: 13.14vh;
+        margin-top: 1vh;
+    }
+
+    .stock, .cardBack, .cardFront, .pile, .foundation, #control, .mobileCardFront{
         height: 20.41160593792173vh;
         width: 13.12145748987854vh;
         user-select: none;
@@ -225,6 +256,18 @@ nav * {
         font-size: 4vh;
         width: 13.12145748987854vh;
     }
+
+    .mobileCardFront {border-radius: 1vh;}
+    .mobileCardFront h1 {
+        width: 13.12145748987854vh;
+        line-height: 20.4397vh;
+        font-size: 8vh;
+    }
+    .mobileCardFront h2{
+        font-size: 4vh;
+        width: 13.12145748987854vh;
+    }
+
     .cardBack{
         border-radius: 1vh;
     }

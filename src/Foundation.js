@@ -7,7 +7,7 @@ export default class Foundation extends Pile{
         this.name = `${suite.suite}Foundation`;
         this.color = `${suite.color}`;
         this.symbol = `${suite.symbol}`;
-        this.classList = ["pile", "foundation", "symbol", "pileClick", "clickable"];
+        this.classList = ["pile", "foundation", "pileClick", "clickable"];
         this.render = this.render.bind(this);
         this.suite = suite.suite;
         this.render();
@@ -28,7 +28,7 @@ export default class Foundation extends Pile{
         })
         me.style.color = `${this.color}`;
         me.innerText = `${this.symbol}`;
-        if(this.mobileUser) me.classList.add("mobileH1");
+        me.classList.add((this.mobileUser)?"mobileSymbol":"symbol");
         document.getElementsByTagName("main")[0].appendChild(me);
     }
     selectCards(aCard){

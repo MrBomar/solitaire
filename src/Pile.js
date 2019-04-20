@@ -81,7 +81,7 @@ export default class Pile{
     resize(){
         if(this.cards.length != 0){
             this.cards.forEach(card=>{
-                card.element().style.top = card.currentStack().element().offsetTop+ "px";
+                card.element().style.top = this.element().offsetTop+ "px";
                 card.element().style.left = this.element().offsetLeft + "px";
             })
         }

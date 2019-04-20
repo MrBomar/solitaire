@@ -79,24 +79,6 @@ const newSolitaire = (type) => {
     }
 }
 
-const javAnimate = {
-    calcUOM(pixels, uom){
-        switch(uom){
-            case "px":
-                return pixels + uom;
-            case "vw":
-                return (pixels / window.innerWidth) * 100 + uom;
-            case "vh":
-                return (pixels / window.innerHeight) * 100 + uom;
-        }
-    },
-    round(figure){
-        let tempFigure = (figure < 0)?figure*-1:figure;
-        let anotherFigure = (tempFigure <= .5)?Math.floor(tempFigure):Math.floor(tempFigure) + 1;
-        return (figure < 0)?anotherFigure*-1:anotherFigure;
-    }
-}
-
 let storedAnimations = [];
 
 Array.from(document.getElementsByTagName("div")).forEach(div=>{
