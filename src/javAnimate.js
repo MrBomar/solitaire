@@ -1,17 +1,4 @@
-//An easy to use function that will move an object to a specified location
-//You must specify;
-    //The DOM object to move
-    //New Position - Expressed as an object {top: value, topUOM: "value", left: value, leftUOM "value"}
-    //New Parent Element - Either DOM object or boolean false
-    //Length of animation - numerical in ms
-    //Frames per Minute - numerical
-    //Keep element on top - boolean
-    //End Position zIndex - numerical
-    //Event Listeners - Specify an array of listeners you need to keep attached, or return false.
-
-//The begin() allows you to control when to fire the animation.
-
-class MoveObj{
+export default class MoveObj{
     constructor(obj, to, newDIV, msec, frames, onTop, zIndex, eventListeners){
         this.obj = obj;
         this.to = to;
@@ -134,8 +121,8 @@ const javAnimate = {
     }
 }
 
-let storedAnimations = [];
+// let storedAnimations = [];
 
-Array.from(document.getElementsByTagName("div")).forEach(div=>{
-    storedAnimations.push(new MoveObj(div,{top:600, topUOM:"vw",left:500, leftUOM:"vh"},false,2000,90,true,2));
-})
+// Array.from(document.getElementsByTagName("div")).forEach(div=>{
+//     storedAnimations.push(new MoveObj(div,{top:600, topUOM:"vw",left:500, leftUOM:"vh"},false,2000,90,true,2));
+// })

@@ -1,5 +1,5 @@
-class Card {
-    constructor(suite, value, face){
+export default class Card {
+    constructor(suite, value, face, mobileUser){
         this.name = `${suite.suite}${value}`;
         this.value = value;
         this.suite = suite;
@@ -9,15 +9,16 @@ class Card {
         this.symbol = this.symbol.bind(this);
         this.render = this.render.bind(this);
         this.events = [];
+        this.mobileUser = mobileUser;
     }
     element(){
         return document.getElementById(this.name);
     }
-    flip(history, moveID){
+    flip(history, moveID, myGame){
         (this.face)?this.element().classList.add("cardBack"):this.element().classList.remove("cardBack");
         (this.face)?this.element().classList.remove("cardFront"):this.element().classList.add("cardFront");
         this.face = !this.face;
-        if(history){currentGame().moveHistory.push({action:"flip",card:this,history:false, ID:moveID})};
+        if(history){myGame.moveHistory.push({action:"flip",card:this,history:false, ID:moveID})};
     }
     symbol(){
         switch(this.value){
@@ -37,7 +38,7 @@ class Card {
         let me = document.createElement("div");
         me.innerHTML = `<h2 class="left top" style="color:${this.suite.color};">${this.symbol()}</h3>
                         <h2 class="right top" style="color:${this.suite.color};">${this.suite.symbol}</h2>                
-                        <h1 style="color:${this.suite.color};">${this.suite.symbol}</h1>
+                        <h1 class="${(this.mobileUser)?'mobileH1':''}" style="color:${this.suite.color};">${this.suite.symbol}</h1>
                         <h2 class="left bottom" style="color:${this.suite.color};">${this.suite.symbol}</h2>
                         <h2 class="right bottom" style="color:${this.suite.color};">${this.symbol()}</h3>`;
         (this.face)?me.classList.add("cardFront"):me.classList.add("cardBack");
@@ -51,6 +52,6 @@ class Card {
         return {top: this.element().offsetTop, left: this.element().offsetLeft};
     }
     currentStack(){
-        return currentGame()[this.element().parentElement.id];
+        return this.element().parentElement.id;
     }
 }

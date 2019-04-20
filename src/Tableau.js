@@ -1,6 +1,6 @@
-//The seven piles at the bottom.
+import Pile from './Pile';
 
-class Tableau extends Pile{
+export default class Tableau extends Pile{
     constructor(name, limit){
         super();
         this.limit = limit;
@@ -24,7 +24,7 @@ class Tableau extends Pile{
         }
     }
     nextCardPOS(){
-        let cardHeight = currentGame().stock.element().offsetHeight;
+        let cardHeight = this.element().offsetHeight;
         let baseMargin = cardHeight / 4;
         let returnMargin = 0;
         if(this.cardCount() > 0){

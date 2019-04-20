@@ -1,4 +1,4 @@
-class Pile{
+export default class Pile{
     constructor(){
         this.cards = []; // stores all card in the stack
         this.element = this.element.bind(this);
@@ -86,9 +86,9 @@ class Pile{
             })
         }
     }
-    topCardFlip(moveID){
+    topCardFlip(moveID, myGame){
         if(this.cardCount() != 0){
-            if(this.topCard().face == false){this.topCard().flip(true,moveID)}
+            if(this.topCard().face == false){this.topCard().flip(true, moveID, myGame)}
         }
     }
 }

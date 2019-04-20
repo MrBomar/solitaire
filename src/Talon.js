@@ -1,6 +1,6 @@
-//The discard pile.
+import Pile from './Pile';
 
-class Talon extends Pile{
+export default class Talon extends Pile{
     constructor(name){
         super();
         this.name = name;

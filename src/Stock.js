@@ -1,4 +1,6 @@
-class Stock extends Pile{
+import Pile from './Pile';
+
+export default class Stock extends Pile{
     constructor(name){
         super();
         this.name = name;

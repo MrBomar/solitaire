@@ -1,0 +1,37 @@
+{
+  "name": "solitaire",
+  "version": "1.0.0",
+  "description": "VanillaJS Solitiaire Game",
+  "main": "solitaire.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "start": "webpack-dev-server --mode development --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrBomar/solitaire.git"
+  },
+  "keywords": [
+    "html5",
+    "javascript",
+    "css",
+    "solitaire",
+    "game"
+  ],
+  "author": "Leslie C. Bomar III",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrBomar/solitaire/issues"
+  },
+  "homepage": "https://github.com/MrBomar/solitaire#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "babel-loader": "^8.0.5",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.3.1"
+  }
+}

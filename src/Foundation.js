@@ -1,8 +1,9 @@
-//The four stacks for collecting the suites.
+import Pile from './Pile';
 
-class Foundation extends Pile{
-    constructor(suite){
+export default class Foundation extends Pile{
+    constructor(suite, mobileUser){
         super();
+        this.mobileUser = mobileUser;
         this.name = `${suite.suite}Foundation`;
         this.color = `${suite.color}`;
         this.symbol = `${suite.symbol}`;
@@ -27,6 +28,7 @@ class Foundation extends Pile{
         })
         me.style.color = `${this.color}`;
         me.innerText = `${this.symbol}`;
+        if(this.mobileUser) me.classList.add("mobileH1");
         document.getElementsByTagName("main")[0].appendChild(me);
     }
     selectCards(aCard){
