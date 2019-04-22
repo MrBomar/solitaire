@@ -34,7 +34,8 @@ export default class Tableau extends Pile{
         } else {
             returnMargin = 0;
         }
-        return {left: this.element().offsetLeft, top:returnMargin+this.element().offsetTop};
+        let stuff = {left: this.element().offsetLeft, top:returnMargin+this.element().offsetTop};
+        return stuff;
     }
     selectCards(clickedCard){
         if(clickedCard.face){ //Performed if the card is face up.

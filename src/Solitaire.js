@@ -149,7 +149,7 @@ class Solitaire{
         if(history){this.moveHistory.push({action:"move",card:thisCard,to:origStack, history:false, ID:count})}; //Stores the move in the history
 
         //Capture object's target location -- GOOD
-        let newPOS = {top: toStack.nextCardPOS().top, topUOM: "vh", left: toStack.nextCardPOS().left, leftUOM: "vw"};
+        let newPOS = {top: toStack.nextCardPOS().top, topUOM: "px", left: toStack.nextCardPOS().left, leftUOM: "px"};
 
         //Animate the card movement -- GOOD
         let myCard = new MoveObj(

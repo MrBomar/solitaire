@@ -191,7 +191,7 @@ nav * {
     user-select: none;
 }
 .tableau{
-    height: 76.56vw;
+    height: 20.4397vw;
     top: 22.4397vw;
 }
 .stock, .talon, .foundation{
@@ -211,6 +211,9 @@ nav * {
 
 @media screen and (min-aspect-ratio: 741 / 741) {
     /* Transition*/
+    .tableau {
+        height: 20.4397vh;
+    }
     #control h3 {
         font-size: 4vh;
     }
