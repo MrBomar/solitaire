@@ -380,7 +380,7 @@ class Solitaire{
         //This function will send the solved deck to the server.
         if(this.storedStock.length > 0){
             let xhr = new XMLHttpRequest;
-            xhr.open("POST", "https://mrlesbomar.com/solitaire/cgi-bin/add_solved_deck.php", true);
+            xhr.open("POST", "https://mrlesbomar.com/games/cgi-bin/add_solved_deck.php", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             xhr.send('input1='+this.storedStock);
             this.storedStock = "";
@@ -390,7 +390,7 @@ class Solitaire{
         let failed = false;
         new Promise((resolve, reject)=>{
             let xhr = new XMLHttpRequest;
-            xhr.open('GET', "https://mrlesbomar.com/solitaire/cgi-bin/get_solved_deck.php");
+            xhr.open('GET', "https://mrlesbomar.com/games/cgi-bin/get_solved_deck.php");
             xhr.onload = () =>{
                 if (xhr.status >= 200 && xhr.status < 300) {
                     resolve(xhr.response);
