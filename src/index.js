@@ -57,7 +57,7 @@ const newSolitaire = (type) => {
         oldDeck = currentGame().storedStock;
         currentGame().clearBoard();
     }
-    games.push(new Solitaire(mobileUser())); //Create a new instance of the the solitare game.
+    games.push(new Solitaire(mobileUser(), navBar)); //Create a new instance of the the solitare game.
     switch(type){
         case 'random':
             currentGame().newGame(currentGame().randomDeck());

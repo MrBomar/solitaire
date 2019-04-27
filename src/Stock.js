@@ -18,6 +18,6 @@ export default class Stock extends Pile{
         this.pushCard(card);
     }
     validateMove(aCard){
-        return true;
+        return false;
     }
 }

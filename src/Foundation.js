@@ -35,9 +35,9 @@ export default class Foundation extends Pile{
         return (this.cardCount() > 0)?[this.topCard()]:[];
     }
     validateMove(aCard){
-        if((aCard.suite.suite == this.suite) && (this.cardCount() == 0) && (aCard.value == 1)){
-            return true;
-        } else if((aCard.suite.suite == this.suite) && (aCard.value == this.topCard().value+1)){
+        if(!!this.cards.length && aCard.suite.suite === this.suite){
+            return (this.topCard().value === aCard.value -1)?true:false;
+        } else if(aCard.value === 1 && aCard.suite.suite === this.suite){
             return true;
         } else {
             return false;

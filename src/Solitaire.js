@@ -6,7 +6,7 @@ import Foundation from './Foundation';
 import MoveObj from './javAnimate';
 
 class Solitaire{
-    constructor(mobileUser){
+    constructor(mobileUser,navBar){
         this.mobileUser = mobileUser;
         this.resize = this.resize.bind(this);
         this.suites = [{suite:"spade", symbol:"♠", color: "black"},
@@ -50,6 +50,7 @@ class Solitaire{
         this.undo = this.undo.bind(this);
         this.won = false;
         this.solveTimer;
+        this.currentSolve = true;
         this.fireCard = this.fireCard.bind(this);
         this.randomDeck = this.randomDeck.bind(this);
         this.celebrationTimer;
@@ -58,6 +59,7 @@ class Solitaire{
         this.cardClickEvent = this.cardClickEvent.bind(this);
         this.pileClickEvent = this.pileClickEvent.bind(this);
         this.reconstituteDeck = this.reconstituteDeck.bind(this);
+        this.navBar = navBar;
     }
     toHex(num){
         return "0123456789ABCDEF".charAt(num)
@@ -184,6 +186,7 @@ class Solitaire{
         if(!this.cardsOnBoard){ //If there are no cards on the board, then we celebrate
             this.celebration();
         }
+        return true;
     }
     cardMoveID(){
         return this.moveHistory.length;
@@ -214,8 +217,6 @@ class Solitaire{
             }
         } else {
             //Action taken if no other cards were previously selected.
-            this.priorClick = selectedCards;
-            this.shade(this.priorClick);
             return this.fireCard(clickedCard);
         }
     }
@@ -307,17 +308,23 @@ class Solitaire{
         return complete;
     }
     quickSolve(){
-        new Promise((resolve,reject)=>{
-            if(true){
-                resolve('Good Stuff');
+        this.solveTimer = setInterval(()=>{
+            if(this.cardsOnBoard()){
+                if(this.currentSolve){
+                    if((!!this.stock.cards.length)||(!!this.talon.cards.length)){
+                        this.talonCycle();
+                    } else {
+                        this.tableauCycle();
+                    }
+                } else {
+                    this.tableauCycle();
+                }
+                this.currentSolve = !this.currentSolve;
+            } else {
+                clearInterval(this.solveTimer)
+                this.celebration();
             }
-        }).then(
-            this.tableauCycle()
-        ).then(
-            this.talonCycle()
-        ).then(
-            this.celebration()
-        )
+        },100)
     }
     cardsOnBoard(){
         //Return true if card remains in stock, talon, or any tableau.
@@ -326,52 +333,52 @@ class Solitaire{
         });
         return (remainingPiles.length > 0)?true:false;
     }
-    fireCard(myCard){
-        let selectPiles = (this.priorClick.length === 1)?this.foundations.concat(this.tableau):this.tableau;
-        let availablePiles = selectPiles.filter(pile => pile.name != myCard.currentStack().name);
-        availablePiles.forEach(pile=>{
-            if((pile.validateMove(myCard))&&(this.priorClick.length > 0)){
-                this.movePriorClick(pile);
-                return true;
-            }
+    fireCard(input){
+        //Define selected cards
+        this.priorClick = (input instanceof Card)?
+            this[input.currentStack()].selectCards(input):
+            input.selectCards(input.topCard());
+
+        //Define the stack
+        let currentStack = (input instanceof Card)?
+            this[input.currentStack()]:
+            input;
+
+        //Define available piles
+        let availablePiles = (currentStack.topCard() === this.priorClick[0])?
+            this.foundations.concat(this.tableau):
+            this.tableau;
+
+        //Filter piles to exclude current pile
+        availablePiles.filter(pile=>{
+            return pile.name !== currentStack.name;
         });
+        
+        console.log(availablePiles);
+        if(this.won && input instanceof Tableau) availablePiles = this.foundations;
+        console.log(availablePiles);
+
+        //Return a valid move
+        let validMove = availablePiles.find(pile => {
+            return pile.validateMove(this.priorClick[0]);
+        });
+
+        //If a valid move exsists then execute
+        return (!!validMove)?this.movePriorClick(validMove):false;
     }
     tableauCycle(){
-        //Currently Unused - part of quickSolve()
-        this.solveTimer = setInterval(()=>{
-            let found = false;
-            let tableauWithCards = this.tableau.filter(tab=>tab.cards.length > 0);
-            if(tableauWithCards.length > 0){
-                tableauWithCards.forEach(tableau=>{
-                    let topCard = tableau.topCard();
-                    if(this.foundationMatch(topCard).validateMove(topCard)){
-                        topCard.element().click();
-                        found = true;
-                    }
-                })
-            }
-            //if(found)this.tableauCycle();
-            if(!found)clearInterval(this.solveTimer);
-        },250)
+        //Part of quickSolve()
+        this.randomizeArray(this.tableau.filter(tab=>!!tab.cards.length)).find(this.fireCard);
     }
     talonCycle(){
-        //Currently Unused - part of quickSolve()
-        this.solveTimer = setInterval(()=>{
-            if(this.talon.cards.length > 0){
-                if(this.foundationMatch(this.talon.topCard()).validateMove(this.talon.topCard())){
-                    //Click card & exit
-                    this.talon.topCard().element().click();
-                } else {
-                    //Click Stock Pile
-                    (this.stock.cards.length > 0)?this.stock.topCard().element().click():this.stock.element().click;
-                }
-            } else if(this.stock.cards.length > 0){
-                //Click Stock Pile
+        if((this.talon.cards.length == 0)&&(this.stock.cards.length == 0)) return;
+        if(this.talon.cards.length > 0){
+            if(!this.fireCard(this.talon.topCard())){
                 this.stock.topCard().element().click();
-            } else {
-                //Exit
             }
-        },250)
+        } else {
+            this.stock.topCard().element().click();
+        }
     }
     foundationMatch(aCard){
         return this.foundations.find(pile=>pile.suite == aCard.suite.suite);
@@ -457,9 +464,9 @@ class Solitaire{
             winning.id = "winner";
             winning.innerHTML = "<h1>WINNER!!</h1>";
             document.getElementsByTagName('main')[0].appendChild(winning);
-            navBar.activate();
-            winning.style.opacity = 1;
-        },500);
+            winning.classList.add("winnerComplete");
+            this.navBar.activate();
+        },2000);
     }
     restoreGameState(){
         let gameState = JSON.parse(localStorage.getItem("gameState"));

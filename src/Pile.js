@@ -22,7 +22,7 @@ export default class Pile{
         return this.cards.length;
     }
     topCard(){
-        return (this.cardCount() > 0)?this.cards[this.cardCount()-1]:false;
+        return (!!this.cards)?this.cards[this.cards.length-1]:false;
     }
     nextCard(){
         return (this.cardCount() > 1)?this.cards[this.cardCount()-2]:false;
